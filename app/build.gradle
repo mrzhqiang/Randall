@@ -35,6 +35,7 @@ dependencies {
     // 依赖注入框架
     compile 'com.google.dagger:dagger:2.10'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
-    // 网页解析器
-    compile files('libs/simple-xml-2.7.1.jar')
+    // 网页解析器，因为无法对元素之间的Text进行解析，因而抛弃这个框架
+//    compile files('libs/simple-xml-2.7.1.jar')
+    compile 'org.jsoup:jsoup:1.10.3'
 }

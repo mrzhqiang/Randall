@@ -2,6 +2,7 @@ package cn.mrzhqiang.randall.data.wml.home;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementListUnion;
+import org.simpleframework.xml.Text;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public class HomeParagraph implements Paragraph {
                               @ElementList(entry = "a", type = AEntry.class, inline = true),
                       })
     public List<Entry> list;
+
+    @Text
+    public String text;
 }

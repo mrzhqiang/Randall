@@ -13,4 +13,5 @@ public enum Type {
     IMG,
     BR,
     A,
+    TEXT,
 }
