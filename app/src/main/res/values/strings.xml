@@ -1,16 +1,24 @@
 <resources>
-    <string name="app_name">Randall</string>
+  <string name="app_name">兰达尔</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+  <!-- Strings related to login -->
+  <string name="prompt_email">Email</string>
+  <string name="prompt_password">Password (optional)</string>
+  <string name="action_sign_in">Sign in or register</string>
+  <string name="action_sign_in_short">Sign in</string>
+  <string name="error_invalid_email">This email address is invalid</string>
+  <string name="error_invalid_password">This password is too short</string>
+  <string name="error_incorrect_password">This password is incorrect</string>
+  <string name="error_field_required">This field is required</string>
+  <string name="permission_rationale">"Contacts permissions are needed for providing email
+    completions."
+  </string>
+  <string name="label_home">选择账号</string>
+  <string name="empty_icon">没有任何数据的图标</string>
+  <string name="empty_hint">很抱歉，没有任何数据</string>
+  <string name="add_uid">添加账号</string>
+  <string name="welcome_header">加入地狱之门</string>
+  <string name="welcome_text">地狱之门是一款手机网页游戏，游戏里的主城叫兰达尔。\n本应用将包括这些功能：1.账号书签；2.账号切换；3.记录保存；4.智能挂机（待确定）；5.自动任务。\n项目开源地址：https://github.com/mrzhqiang/Randall</string>
+  <string name="application_logo">应用图标</string>
+  <string name="welcome_developer">本应用由 mrzhqiang 开发，仅供学习交流，不得作为商业用途</string>
 </resources>

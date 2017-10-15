@@ -12,16 +12,14 @@ import cn.mrzhqiang.randall.di.module.AppModule;
  */
 public class RandallApp extends Application {
 
-    private static AppComponent appcomponent;
+  private static AppComponent appcomponent;
 
-    @Override public void onCreate() {
-        super.onCreate();
-        appcomponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-    }
+  @Override public void onCreate() {
+    super.onCreate();
+    appcomponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+  }
 
-    public static AppComponent appComponent() {
-        return appcomponent;
-    }
+  public static AppComponent appComponent() {
+    return appcomponent;
+  }
 }
