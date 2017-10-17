@@ -17,8 +17,14 @@
   <string name="empty_icon">没有任何数据的图标</string>
   <string name="empty_hint">很抱歉，没有任何数据</string>
   <string name="add_uid">添加账号</string>
-  <string name="welcome_header">加入地狱之门</string>
-  <string name="welcome_text">地狱之门是一款手机网页游戏，游戏里的主城叫兰达尔。\n本应用将包括这些功能：1.账号书签；2.账号切换；3.记录保存；4.智能挂机（待确定）；5.自动任务。\n项目开源地址：https://github.com/mrzhqiang/Randall</string>
+  <string name="welcome_header">开启地狱之门</string>
+  <string name="welcome_text">地狱之门是一款网页游戏，游戏里的主城叫兰达尔。\n兰达尔将包括：\n1.账号管理；\n2.快速切换；\n3.记录保存；\n4.定时任务；\n5.智能处理。\n项目开源：https://github.com/mrzhqiang/Randall</string>
   <string name="application_logo">应用图标</string>
-  <string name="welcome_developer">本应用由 mrzhqiang 开发，仅供学习交流，不得作为商业用途</string>
+  <string name="welcome_developer">本应用由 mrzhqiang 开发，欢迎start项目</string>
+  <string name="other_game">其他游戏</string>
+  <string name="uid">用户名/UID</string>
+  <string name="password">密码</string>
+  <string name="choose_hint">您当前所选的是：</string>
+  <string name="login">登录</string>
+  <string name="register">注册</string>
 </resources>

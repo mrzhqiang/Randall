@@ -26,6 +26,15 @@ public class WelcomeActivity extends AppCompatActivity {
     }
   };
 
+  public final View.OnClickListener otherGame = new View.OnClickListener() {
+    @Override public void onClick(View v) {
+      Context context = v.getContext();
+      Intent intent = new Intent(context, OtherGameActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+      context.startActivity(intent);
+    }
+  };
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ActivityWelcomeBinding binding =
@@ -35,7 +44,7 @@ public class WelcomeActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
-      actionBar.setDisplayShowHomeEnabled(false);
+      actionBar.setDisplayShowHomeEnabled(true);
       actionBar.setDisplayHomeAsUpEnabled(false);
     }
   }

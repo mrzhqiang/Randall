@@ -2,41 +2,33 @@
 <layout>
   <data>
     <variable
-        name="viewModel"
-        type="cn.mrzhqiang.randall.ui.ChooseUidActivity"
+        name="randall"
+        type="cn.mrzhqiang.randall.ui.RandallActivity"
         />
   </data>
-
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/colorBackground"
       android:orientation="vertical"
       >
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/app_name"
         >
+
     </android.support.v7.widget.Toolbar>
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical"
-          >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_uid"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="16dp"
-            >
-        </android.support.v7.widget.RecyclerView>
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-      </LinearLayout>
+    </FrameLayout>
   </LinearLayout>
 </layout>

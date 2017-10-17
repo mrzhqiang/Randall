@@ -15,7 +15,7 @@
       tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
     <activity
-        android:name=".ui.ChooseUidActivity"
+        android:name=".ui.RandallActivity"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -24,15 +24,19 @@
     </activity>
 
     <activity
-        android:name=".ui.LoginActivity">
-    </activity>
-    <activity
         android:name=".ui.WelcomeActivity"
         android:launchMode="singleTask"/>
+
     <activity
         android:name=".ui.AddUidActivity"
         android:label="@string/add_uid"
         android:launchMode="singleTask"/>
-  </application>
 
+    <activity
+        android:name=".ui.LoginActivity">
+    </activity>
+
+    <activity android:name=".ui.OtherGameActivity"/>
+
+  </application>
 </manifest>
