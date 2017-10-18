@@ -11,6 +11,8 @@ import retrofit2.http.Query;
  */
 public interface Randall {
 
+  String BASE_URL = "http://haowanba.com";
+
   @GET("/") Call<String> host();
   //    Set-Cookie:JSESSIONID=DEF2DD9692EDCE8B1D7AA75927241FA2
   //    Cookie:JSESSIONID=DEF2DD9692EDCE8B1D7AA75927241FA2

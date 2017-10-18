@@ -3,6 +3,8 @@ package cn.mrzhqiang.randall.di.module;
 import android.app.Application;
 import android.net.Uri;
 
+import cn.mrzhqiang.randall.net.Randall;
+import cn.mrzhqiang.randall.net.converter.JsoupConverterFactory;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -24,12 +26,6 @@ import rx.schedulers.Schedulers;
 @Module(includes = {
     GsonModule.class, OkHttpModule.class,
 }) public final class NetModule {
-
-  private final String baseUrl;
-
-  public NetModule(String baseUrl) {
-    this.baseUrl = baseUrl;
-  }
 
   /**
    * 提供OkHttp3下载器给Picasso使用
@@ -60,10 +56,14 @@ import rx.schedulers.Schedulers;
    * 提供Retrofit单例，去构建响应的后台Api接口实例
    */
   @Provides @Singleton Retrofit provideRetrofit(OkHttpClient client/*, @Named("net") Gson gson*/) {
-    return new Retrofit.Builder().baseUrl(baseUrl)// 暂时这样写
-        .addConverterFactory(ScalarsConverterFactory.create()) // String
+    return new Retrofit.Builder().baseUrl(Randall.BASE_URL)// 暂时这样写
+        .addConverterFactory(JsoupConverterFactory.create()) // String To Jsoup's Document
         .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
         .client(client)
         .build();
+  }
+
+  @Provides @Singleton Randall provideRandall(Retrofit retrofit) {
+    return retrofit.create(Randall.class);
   }
 }

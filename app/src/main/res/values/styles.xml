@@ -11,7 +11,8 @@
     <item name="windowNoTitle">true</item>
 
     <item name="toolbarStyle">@style/Toolbar</item>
-    <item name="colorControlNormal">@android:color/white</item>
+    <item name="homeAsUpIndicator">@drawable/ic_action_name</item>
+    <!--<item name="colorControlNormal">@android:color/white</item>-->
     <item name="actionMenuTextColor">@android:color/white</item>
     <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation
     </item>

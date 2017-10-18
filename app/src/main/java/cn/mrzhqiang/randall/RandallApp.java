@@ -5,7 +5,6 @@ import android.app.Application;
 import cn.mrzhqiang.randall.di.component.AppComponent;
 import cn.mrzhqiang.randall.di.component.DaggerAppComponent;
 import cn.mrzhqiang.randall.di.module.AppModule;
-import cn.mrzhqiang.randall.di.module.NetModule;
 
 /**
  * <p>
@@ -19,7 +18,6 @@ public class RandallApp extends Application {
     super.onCreate();
     appcomponent = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
-        .netModule(new NetModule("http://haowanba.com"))
         .build();
   }
 

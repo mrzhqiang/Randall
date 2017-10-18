@@ -1,6 +1,5 @@
 package cn.mrzhqiang.randall.db;
 
-import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -8,11 +7,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import cn.mrzhqiang.logger.Log;
+import cn.mrzhqiang.randall.db.table.AccountTable;
 
 /**
  * 数据库辅助工具
- * <p>
- * Created by mrZQ on 2017/4/5.
  */
 public final class DbHelper extends SQLiteOpenHelper {
   private static final String TAG = "DbHelper";
@@ -20,14 +18,9 @@ public final class DbHelper extends SQLiteOpenHelper {
   private static final String DB_NAME = "randall.db";
   private static final int VERSION = 1;
 
-  /**
-   * 包括所有表的创建语句，还有数据库版本的升、降级语句
-   *
-   * @see Context 最好是{@link Application#getApplicationContext()}
-   * @see DbTable
-   */
   private static final DbTable[] DB_TABLES = {
-      // TODO create table
+      new AccountTable(),
+
   };
 
   public DbHelper(@NonNull Context context) {

@@ -1,6 +1,7 @@
 package cn.mrzhqiang.randall.db;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -8,11 +9,10 @@ import java.util.Date;
 
 /**
  * 数据库工厂方法
- * <p>
- * Created by mrZQ on 2017/4/5.
  */
 public final class Db {
-  private static final int BOOLEAN_TRUE = 1;
+  public static final int BOOLEAN_FALSE = 0;
+  public static final int BOOLEAN_TRUE = 1;
 
   public static boolean checkBoolean(int value) {
     return value == BOOLEAN_TRUE;
@@ -42,18 +42,12 @@ public final class Db {
     return new Date(cursor.getLong(cursor.getColumnIndex(columnName)));
   }
 
-  public static String encode(String string) {
-    if (!TextUtils.isEmpty(string)) {
-      return new String(Base64.encode(string.getBytes(), Base64.DEFAULT));
-    }
-    return null;
+  public static String encode(@NonNull String string) {
+    return new String(Base64.encode(string.getBytes(), Base64.DEFAULT));
   }
 
-  public static String decode(String string) {
-    if (!TextUtils.isEmpty(string)) {
-      return new String(Base64.decode(string.getBytes(), Base64.DEFAULT));
-    }
-    return null;
+  public static String decode(@NonNull String string) {
+    return new String(Base64.decode(string.getBytes(), Base64.DEFAULT));
   }
 
   private Db() {

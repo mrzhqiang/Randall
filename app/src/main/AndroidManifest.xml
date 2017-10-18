@@ -32,10 +32,6 @@
         android:label="@string/add_uid"
         android:launchMode="singleTask"/>
 
-    <activity
-        android:name=".ui.LoginActivity">
-    </activity>
-
     <activity android:name=".ui.OtherGameActivity"/>
 
   </application>

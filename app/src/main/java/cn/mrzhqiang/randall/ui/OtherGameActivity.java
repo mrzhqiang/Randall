@@ -3,7 +3,6 @@ package cn.mrzhqiang.randall.ui;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import cn.mrzhqiang.randall.R;

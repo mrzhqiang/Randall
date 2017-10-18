@@ -1,11 +1,11 @@
 package cn.mrzhqiang.randall.di.component;
 
+import cn.mrzhqiang.randall.model.AccountModel;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Singleton;
 
 import cn.mrzhqiang.randall.di.module.AppModule;
-import cn.mrzhqiang.randall.ui.LoginActivity;
 import dagger.Component;
 
 @Singleton @Component(modules = AppModule.class) public interface AppComponent {
@@ -13,5 +13,6 @@ import dagger.Component;
   Picasso picasso();
 
   // add inject method
-  void inject(LoginActivity loginActivity);
+  void inject(AccountModel accountModel);
+
 }

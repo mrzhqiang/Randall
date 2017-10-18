@@ -9,7 +9,6 @@
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
@@ -47,16 +46,13 @@
             android:layout_height="wrap_content"
             android:hint="@string/uid"
             android:inputType="text"
-            android:text="@{addUid.username}"
+            android:text="@={addUid.username}"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            tools:text="1234567"
             />
       </android.support.design.widget.TextInputLayout>
       <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:counterEnabled="true"
-          app:counterMaxLength="15"
           app:error="@{addUid.passwordError}"
           app:errorEnabled="true"
           app:passwordToggleEnabled="true"
@@ -66,9 +62,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:text="@{addUid.password}"
+            android:text="@={addUid.password}"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            tools:text="123456"
             />
       </android.support.design.widget.TextInputLayout>
       <LinearLayout
@@ -86,9 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="@{addUid.chooseServer}"
-            android:text="@{addUid.serverName}"
+            android:text="@={addUid.serverName}"
             android:textColor="@color/colorAccent"
-            tools:text="永恒"
             style="@style/Widget.AppCompat.Button.Borderless"
             />
       </LinearLayout>

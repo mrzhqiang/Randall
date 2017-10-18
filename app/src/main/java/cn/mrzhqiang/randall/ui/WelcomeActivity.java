@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import cn.mrzhqiang.randall.R;
@@ -42,10 +41,5 @@ public class WelcomeActivity extends AppCompatActivity {
     binding.setWelcome(this);
 
     setSupportActionBar(binding.toolbar);
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) {
-      actionBar.setDisplayShowHomeEnabled(true);
-      actionBar.setDisplayHomeAsUpEnabled(false);
-    }
   }
 }
