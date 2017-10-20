@@ -2,8 +2,10 @@ package cn.mrzhqiang.randall.ui;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.data.Account;
@@ -18,22 +20,21 @@ import rx.functions.Action1;
  */
 public class RandallActivity extends AppCompatActivity {
 
+  public final ObservableArrayList<Account> accountList = new ObservableArrayList<>();
+
   private final AccountModel accountModel = new AccountModel();
 
   private Subscription accountSub;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ActivityRandallBinding binding =
-        DataBindingUtil.setContentView(this, R.layout.activity_randall);
-    binding.setRandall(this);
-
-    setSupportActionBar(binding.toolbar);
-
-    // FIXME 应该使用查询语句直接查询，这种方式有可能出现未知问题
+    //对账户进行监听
     accountSub = accountModel.queryAccountList(new Action1<List<Account>>() {
       @Override public void call(List<Account> accounts) {
-        if (accounts == null || accounts.size() == 0) {
+        if (isFinishing()) {
+          return;
+        }
+        if (accounts.size() == 0) {
           Intent intent = new Intent(RandallActivity.this, WelcomeActivity.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
@@ -41,9 +42,23 @@ public class RandallActivity extends AppCompatActivity {
           return;
         }
 
-        // TODO 展示账户列表
+        accountList.clear();
+        accountList.addAll(accounts);
+
+        // 这里是测试方法
+        StringBuilder builder = new StringBuilder();
+        for (Account account : accounts) {
+          builder.append(account.toString());
+        }
+        new AlertDialog.Builder(RandallActivity.this).setMessage(builder.toString()).show();
       }
     });
+
+    ActivityRandallBinding binding =
+        DataBindingUtil.setContentView(this, R.layout.activity_randall);
+    binding.setRandall(this);
+
+    setSupportActionBar(binding.toolbar);
   }
 
   @Override protected void onDestroy() {

@@ -1,6 +1,7 @@
 package cn.mrzhqiang.randall.di.component;
 
 import cn.mrzhqiang.randall.model.AccountModel;
+import cn.mrzhqiang.randall.model.RandallModel;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Singleton;
@@ -15,4 +16,5 @@ import dagger.Component;
   // add inject method
   void inject(AccountModel accountModel);
 
+  void inject(RandallModel randallModel);
 }

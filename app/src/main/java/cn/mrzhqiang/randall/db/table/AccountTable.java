@@ -26,7 +26,6 @@ public final class AccountTable implements DbTable {
       account.password = Db.decode(Db.getString(cursor, AccountTable.COL_PASSWORD));
       account.alias = Db.getString(cursor, AccountTable.COL_ALIAS);
       account.status = Account.from(Db.getInt(cursor, AccountTable.COL_STATUS));
-      account.isAvailable = Db.getBoolean(cursor, AccountTable.COL_IS_AVAILABLE);
       account.updated = Db.getDate(cursor, AccountTable.COL_UPDATED);
       account.created = Db.getDate(cursor, AccountTable.COL_CREATED);
       return account;
@@ -40,7 +39,6 @@ public final class AccountTable implements DbTable {
         .password(account.password)
         .alias(account.alias())
         .status(account.status)
-        .type(account.isAvailable)
         .updated(account.updated)
         .created(account.created)
         .build();
@@ -60,7 +58,6 @@ public final class AccountTable implements DbTable {
   public static final String COL_ALIAS = "_alias";
   public static final String COL_STATUS = "status";
 
-  public static final String COL_IS_AVAILABLE = "type";
   public static final String COL_UPDATED = "updated";
   public static final String COL_CREATED = "created";
 
@@ -78,9 +75,7 @@ public final class AccountTable implements DbTable {
       + COL_ALIAS
       + " TEXT, "
       + COL_STATUS
-      + " INTEGER NOT NULL, "
-      + COL_IS_AVAILABLE
-      + " INTEGER DEFAULT " + Db.BOOLEAN_TRUE + ", "
+      + " INTEGER DEFAULT 0, "
       + COL_UPDATED
       + " INTEGER NOT NULL, "
       + COL_CREATED
@@ -121,11 +116,6 @@ public final class AccountTable implements DbTable {
 
     public Builder status(Account.Status status) {
       values.put(COL_STATUS, status.code());
-      return this;
-    }
-
-    public Builder type(boolean isAvailable) {
-      values.put(COL_IS_AVAILABLE, isAvailable ? Db.BOOLEAN_TRUE : Db.BOOLEAN_FALSE);
       return this;
     }
 

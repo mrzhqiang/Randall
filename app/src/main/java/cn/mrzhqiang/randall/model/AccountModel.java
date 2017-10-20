@@ -2,16 +2,15 @@ package cn.mrzhqiang.randall.model;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import cn.mrzhqiang.randall.RandallApp;
 import cn.mrzhqiang.randall.data.Account;
-import cn.mrzhqiang.randall.db.Db;
 import cn.mrzhqiang.randall.db.table.AccountTable;
 import cn.mrzhqiang.randall.net.Randall;
 import com.squareup.sqlbrite.BriteDatabase;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -22,12 +21,13 @@ import rx.schedulers.Schedulers;
  * 账户模块，包含所有与之相关的网络/本地逻辑
  */
 public final class AccountModel {
+  private static final String TAG = "AccountModel";
 
   private static final String QUERY_ACCOUNT_LIST = "SELECT * FROM "
       + AccountTable.NAME
       + " WHERE "
-      + AccountTable.COL_IS_AVAILABLE
-      + " =?"
+      + AccountTable.COL_STATUS
+      + " >?"
       + " ORDER BY "
       + AccountTable.COL_CREATED
       + " DESC";
@@ -71,6 +71,7 @@ public final class AccountModel {
     }).observeOn(AndroidSchedulers.mainThread()).subscribe(action1);
   }
 
+  // TODO 这个方法应该拆分一下
   public void updateAccount(@NonNull Account account, @NonNull Action1<Boolean> action1) {
     Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Boolean>() {
       @Override public Boolean call(Account account) {
@@ -88,13 +89,17 @@ public final class AccountModel {
     }).observeOn(AndroidSchedulers.mainThread()).subscribe(action1);
   }
 
-  /** 以订阅的方式查询数据库是否存在账户列表 */
-  @CheckResult
-  public Subscription queryAccountList(Action1<List<Account>> action1) {
-    String isAvailable = String.valueOf(Db.BOOLEAN_TRUE);
-    return db.createQuery(AccountTable.NAME, QUERY_ACCOUNT_LIST, isAvailable)
+  /** 查询数据库是否存在账户列表，将以订阅的方式保持监听，一旦账户数量清零，则应该执行对应操作 */
+  @CheckResult public Subscription queryAccountList(Action1<List<Account>> action1) {
+    String delete = String.valueOf(Account.Status.DELETE.code());
+    return db.createQuery(AccountTable.NAME, QUERY_ACCOUNT_LIST, delete)
         .mapToList(AccountTable.MAPPER)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(action1);
+        .subscribe(action1, new Action1<Throwable>() {
+          @Override public void call(Throwable throwable) {
+            Log.e(TAG, "查询账户失败：" + throwable.getMessage());
+          }
+        });
   }
+
 }

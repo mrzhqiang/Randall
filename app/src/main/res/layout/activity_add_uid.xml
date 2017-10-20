@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
   <data>
     <variable
         name="addUid"
@@ -7,8 +11,6 @@
         />
   </data>
   <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
@@ -21,18 +23,35 @@
         app:title="@string/add_uid"
         >
     </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+      <ImageView
+          android:layout_width="120dp"
+          android:layout_height="45dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/game_logo"
+          android:visibility="@{addUid.logoVisibility}"
+          app:gameLogo="@{addUid.gamePath}"
+          tools:visibility="visible"
+          />
+      <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:visibility="@{addUid.loadVisibility}"
+          android:layout_gravity="center"
+          />
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         >
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_weight="1"
-          />
       <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -45,7 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/uid"
-            android:inputType="text"
+            android:inputType="textVisiblePassword"
+            android:digits="1234567890qwertyuiopasdfghjklzxcvbnm"
             android:text="@={addUid.username}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             />
@@ -69,7 +89,6 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
           android:orientation="horizontal"
           >
         <TextView
@@ -82,24 +101,15 @@
             android:layout_height="wrap_content"
             android:onClick="@{addUid.chooseServer}"
             android:text="@={addUid.serverName}"
-            android:textColor="@color/colorAccent"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            tools:text="[永恒]"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             />
       </LinearLayout>
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
           android:orientation="horizontal"
           >
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="@{addUid.login}"
-            android:text="@string/login"
-            style="@style/Widget.AppCompat.Button.Colored"
-            />
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -108,12 +118,28 @@
             android:text="@string/register"
             style="@style/Widget.AppCompat.Button.Colored"
             />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="@{addUid.login}"
+            android:text="@string/login"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
       </LinearLayout>
-      <Space
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_weight="1"
-          />
     </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="@{addUid.gameInfo}"
+          tools:text="荣唐科技 10-20 15:09"
+          />
+    </FrameLayout>
   </LinearLayout>
 </layout>

@@ -4,20 +4,27 @@ import cn.mrzhqiang.helper.TimeHelper;
 import java.util.Date;
 
 /**
- * 用户账户，包括uid、用户名、密码，以及相应的
+ * 用户账户，包括uid、用户名、密码，以及相应的本地属性
  */
 public final class Account {
 
+  /** 数据库id，用来更新字段或删除记录 */
   public long id = 0;
 
+  /** 地狱之门生成的uid */
   public long uid;
+  /** 用户输入的账号，或未来开发生成小号而自动创建 */
   public String username;
+  /** 用户输入的密码，或小号的随机密码 */
   public String password;
 
+  /** 用户设定的一个别名，如果没有输入的话，将会是账号+id的形式 */
   public String alias;
+  /** 状态：已删除、无效、默认、离线、在线 */
   public Status status = Status.DEFAULT;
-  public boolean isAvailable = true;
+  /** 更新时间：当使用一个账号进入游戏，将获得这个值的更新 */
   public Date updated;
+  /** 创建时间：默认的排序指标，其他还可以选择：别名、状态、更新时间 */
   public Date created;
 
   public String alias() {
@@ -37,13 +44,20 @@ public final class Account {
     return TimeHelper.showTime(created.getTime());
   }
 
+  @Override public String toString() {
+    return "alias:" + alias + ", status:" + status;
+  }
+
   /** 从数据库保存的code生成状态枚举 */
   public static Status from(int code) {
+    if (code == -2) {
+      return Status.DELETE;
+    }
     if (code == -1) {
       return Status.INVALID;
     }
     if (code == 1) {
-      return Status.OFLINE;
+      return Status.OFFLINE;
     }
     if (code == 2) {
       return Status.ONLINE;
@@ -52,7 +66,8 @@ public final class Account {
   }
 
   public enum Status {
-    INVALID("无效", -1), DEFAULT("未认证", 0), OFLINE("离线", 1), ONLINE("在线", 2),;
+    DELETE("已删除", Integer.MIN_VALUE), INVALID("无效", -1), DEFAULT("未认证", 0), OFFLINE("离线",
+        1), ONLINE("在线", 2),;
 
     final String value;
     final int code;
@@ -70,5 +85,4 @@ public final class Account {
       return value;
     }
   }
-
 }

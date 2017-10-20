@@ -1,8 +1,10 @@
 package cn.mrzhqiang.randall.net;
 
+import org.jsoup.nodes.Document;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * 来自 <a href="http://haowanba.com">好玩吧</a> 的接口
@@ -13,7 +15,9 @@ public interface Randall {
 
   String BASE_URL = "http://haowanba.com";
 
-  @GET("/") Call<String> host();
+  @GET("/") Observable<Document> home();
+
+
   //    Set-Cookie:JSESSIONID=DEF2DD9692EDCE8B1D7AA75927241FA2
   //    Cookie:JSESSIONID=DEF2DD9692EDCE8B1D7AA75927241FA2
 
