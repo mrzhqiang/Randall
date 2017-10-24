@@ -82,10 +82,21 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:enabled="@{addUid.passwordEnabled}"
             android:text="@={addUid.password}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             />
       </android.support.design.widget.TextInputLayout>
+      <!--suppress AndroidUnknownAttribute -->
+      <CheckBox
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/random_password"
+          android:checked="false"
+          android:textColor="@color/colorAccent"
+          app:buttonTint="@color/colorAccent"
+          android:onCheckedChanged="@{addUid.randomPassword}"
+          />
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

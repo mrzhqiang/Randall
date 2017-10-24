@@ -35,13 +35,17 @@ public final class Account {
   }
 
   public String update() {
-    if (updated == null) return TimeHelper.showTime(System.currentTimeMillis());
-    return TimeHelper.showTime(updated.getTime());
+    if (updated == null) {
+      updated = new Date();
+    }
+    return TimeHelper.showTime(updated);
   }
 
   public String create() {
-    if (created == null) return TimeHelper.showTime(System.currentTimeMillis());
-    return TimeHelper.showTime(created.getTime());
+    if (created == null) {
+      created = new Date();
+    }
+    return TimeHelper.showTime(created);
   }
 
   @Override public String toString() {

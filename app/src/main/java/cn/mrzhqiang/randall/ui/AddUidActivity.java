@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
@@ -13,16 +14,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+import cn.mrzhqiang.helper.AccountHelper;
+import cn.mrzhqiang.helper.NameHelper;
 import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.data.Home;
 import cn.mrzhqiang.randall.databinding.ActivityAddUidBinding;
 import cn.mrzhqiang.randall.model.AccountModel;
 import cn.mrzhqiang.randall.model.RandallModel;
+import cn.mrzhqiang.randall.net.Result;
 import com.squareup.picasso.Picasso;
+import rx.Subscriber;
 import rx.functions.Action1;
 
 /**
@@ -52,19 +57,31 @@ public class AddUidActivity extends AppCompatActivity {
   public final ObservableInt logoVisibility = new ObservableInt(View.GONE);
   public final ObservableInt loadVisibility = new ObservableInt(View.VISIBLE);
 
+  public final ObservableBoolean passwordEnabled = new ObservableBoolean(true);
+
+  public final CompoundButton.OnCheckedChangeListener randomPassword =
+      new CompoundButton.OnCheckedChangeListener() {
+        @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+          passwordEnabled.set(!isChecked);
+          if (isChecked) {
+            password.set(AccountHelper.createPassword(6));
+          }
+        }
+      };
+
   public final View.OnClickListener chooseServer = new View.OnClickListener() {
     @Override public void onClick(View v) {
       Context context = v.getContext();
-      if (mHome == null || mHome.serverList == null) {
+      if (home == null || home.serverList == null) {
         Toast.makeText(context, "请等待数据加载完成或手动刷新", Toast.LENGTH_SHORT).show();
         return;
       }
 
       new AlertDialog.Builder(context).setTitle("选择服务器")
-          .setSingleChoiceItems(mHome.asNameList(), index, new DialogInterface.OnClickListener() {
+          .setSingleChoiceItems(home.asNameList(), index, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
               index = which;
-              serverName.set(mHome.serverList.get(index).text());
+              serverName.set(home.serverList.get(index).text());
               dialog.dismiss();
             }
           })
@@ -99,7 +116,7 @@ public class AddUidActivity extends AppCompatActivity {
   private final AccountModel accountModel = new AccountModel();
   private final RandallModel randallModel = new RandallModel();
 
-  private Home mHome;
+  private Home home;
   private int index = 0;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,12 +127,17 @@ public class AddUidActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
 
     // TODO 应该检测数据库是否存在记录，以此设定是否自动加载，或显示刷新菜单按钮
-    randallModel.loadHome(new Action1<Home>() {
-      @Override public void call(Home home) {
+    randallModel.loadHome(new Result<Home>() {
+      @Override public void onSuccessful(Home result) {
         loadVisibility.set(View.GONE);
         logoVisibility.set(View.VISIBLE);
-        mHome = home;
+        home = result;
         loadData();
+      }
+
+      @Override public void onFailed(String message) {
+        loadVisibility.set(View.GONE);
+
       }
     });
   }
@@ -130,10 +152,10 @@ public class AddUidActivity extends AppCompatActivity {
   }
 
   private void loadData() {
-    gamePath.set(mHome.gamePath.absUrl("src"));
-    if (mHome.serverList.size() > 0) {
-      serverName.set(mHome.serverList.get(index).text());
+    gamePath.set(home.gamePath.absUrl("src"));
+    if (home.serverList.size() > 0) {
+      serverName.set(home.serverList.get(index).text());
     }
-    gameInfo.set(mHome.gameInfo.toString());
+    gameInfo.set(home.gameInfo.toString());
   }
 }

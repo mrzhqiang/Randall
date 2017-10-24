@@ -29,4 +29,5 @@
   <string name="register">注册</string>
   <string name="game_logo">游戏图标</string>
   <string name="game_icon">游戏图标</string>
+  <string name="random_password">随机密码</string>
 </resources>
