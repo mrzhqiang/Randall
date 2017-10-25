@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:minHeight="50dp"
         android:orientation="vertical"
         >
       <ImageView
@@ -36,7 +37,17 @@
           android:contentDescription="@string/game_logo"
           android:visibility="@{addUid.logoVisibility}"
           app:gameLogo="@{addUid.gamePath}"
-          tools:visibility="visible"
+          tools:visibility="gone"
+          />
+      <Button
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="@string/load_failed_retry"
+          android:visibility="@{addUid.retryVisibility}"
+          android:onClick="@{addUid.loadHome}"
+          style="@style/Widget.AppCompat.Button.Borderless.Colored"
+          tools:visibility="gone"
           />
       <ProgressBar
           android:layout_width="wrap_content"
@@ -65,7 +76,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/uid"
             android:inputType="textVisiblePassword"
-            android:digits="1234567890qwertyuiopasdfghjklzxcvbnm"
+            android:digits="@string/char_number"
             android:text="@={addUid.username}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             />
@@ -92,7 +103,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/random_password"
-          android:checked="false"
+          android:checked="true"
           android:textColor="@color/colorAccent"
           app:buttonTint="@color/colorAccent"
           android:onCheckedChanged="@{addUid.randomPassword}"

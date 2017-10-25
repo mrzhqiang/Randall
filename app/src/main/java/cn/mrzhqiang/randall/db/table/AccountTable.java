@@ -21,7 +21,6 @@ public final class AccountTable implements DbTable {
     @Override public Account call(Cursor cursor) {
       Account account = new Account();
       account.id = Db.getLong(cursor, AccountTable.COL_ID);
-      account.uid = Db.getLong(cursor, AccountTable.COL_UID);
       account.username = Db.decode(Db.getString(cursor, AccountTable.COL_USERNAME));
       account.password = Db.decode(Db.getString(cursor, AccountTable.COL_PASSWORD));
       account.alias = Db.getString(cursor, AccountTable.COL_ALIAS);
@@ -34,8 +33,7 @@ public final class AccountTable implements DbTable {
 
   /** 这个方法在插入新账户时使用，要更新这个表的对应字段，请使用Builder类 */
   public static ContentValues toContentValues(@NonNull Account account) {
-    return new Builder().uid(account.uid)
-        .username(account.username)
+    return new Builder().username(account.username)
         .password(account.password)
         .alias(account.alias())
         .status(account.status)
@@ -51,11 +49,10 @@ public final class AccountTable implements DbTable {
 
   public static final String COL_ID = "_id";
 
-  public static final String COL_UID = "_uid";
   public static final String COL_USERNAME = "username";
   public static final String COL_PASSWORD = "password";
 
-  public static final String COL_ALIAS = "_alias";
+  public static final String COL_ALIAS = "_alias";// 别名，默认是上次登录服务器名，可以自己定义
   public static final String COL_STATUS = "status";
 
   public static final String COL_UPDATED = "updated";
@@ -66,8 +63,6 @@ public final class AccountTable implements DbTable {
       + " ("
       + COL_ID
       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + COL_UID
-      + " INTEGER UNIQUE NOT NULL, "
       + COL_USERNAME
       + " varchar(15) UNIQUE NOT NULL, "
       + COL_PASSWORD
@@ -93,11 +88,6 @@ public final class AccountTable implements DbTable {
   /** 将账户对象转为ContentValues类，基本上用于更新数据 */
   public static class Builder {
     private final ContentValues values = new ContentValues();
-
-    public Builder uid(long uid) {
-      values.put(COL_UID, uid);
-      return this;
-    }
 
     public Builder username(@NonNull String username) {
       values.put(COL_USERNAME, Db.encode(username));

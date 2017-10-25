@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.databinding.ActivityRandallBinding;
@@ -61,10 +63,23 @@ public class RandallActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.randall, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_add_uid:
+        Intent intent = new Intent(this, AddUidActivity.class);
+        startActivity(intent);
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (!accountSub.isUnsubscribed()) {
-      accountSub.unsubscribe();
-    }
+    accountSub.unsubscribe();
   }
 }

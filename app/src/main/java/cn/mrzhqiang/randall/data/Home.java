@@ -36,9 +36,6 @@ public final class Home {
   }
 
   public String[] asNameList() {
-    if (serverList == null) {
-      return null;
-    }
     String[] names = new String[serverList.size()];
     for (int i = 0; i < serverList.size(); i++) {
       names[i] = serverList.get(i).text();

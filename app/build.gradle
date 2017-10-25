@@ -56,7 +56,7 @@ dependencies {
   // 简单的调试日志工具
   compile 'com.github.mrzhqiang:debug-log:1.1'
   // 常用的开发辅助工具
-  compile 'com.github.mrzhqiang:helper:1.2'
+  compile 'com.github.mrzhqiang:helper:1.2.1'
 
   // 官方框架
   compile 'com.android.support:design:26.0.0-alpha1'
