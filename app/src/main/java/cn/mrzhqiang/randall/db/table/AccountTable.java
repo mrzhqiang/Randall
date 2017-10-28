@@ -7,7 +7,6 @@ import android.util.LongSparseArray;
 import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.db.Db;
 import cn.mrzhqiang.randall.db.DbTable;
-import java.util.Date;
 import java.util.List;
 import rx.functions.Func1;
 
@@ -25,8 +24,6 @@ public final class AccountTable implements DbTable {
       account.password = Db.decode(Db.getString(cursor, AccountTable.COL_PASSWORD));
       account.alias = Db.getString(cursor, AccountTable.COL_ALIAS);
       account.status = Account.from(Db.getInt(cursor, AccountTable.COL_STATUS));
-      account.updated = Db.getDate(cursor, AccountTable.COL_UPDATED);
-      account.created = Db.getDate(cursor, AccountTable.COL_CREATED);
       return account;
     }
   };
@@ -37,8 +34,7 @@ public final class AccountTable implements DbTable {
         .password(account.password)
         .alias(account.alias())
         .status(account.status)
-        .updated(account.updated)
-        .created(account.created)
+        .create(System.currentTimeMillis())
         .build();
   }
 
@@ -85,11 +81,11 @@ public final class AccountTable implements DbTable {
     return new LongSparseArray<>();
   }
 
-  /** 将账户对象转为ContentValues类，基本上用于更新数据 */
+  /** 更新账户信息的构造器 */
   public static class Builder {
     private final ContentValues values = new ContentValues();
 
-    public Builder username(@NonNull String username) {
+    private Builder username(@NonNull String username) {
       values.put(COL_USERNAME, Db.encode(username));
       return this;
     }
@@ -105,27 +101,17 @@ public final class AccountTable implements DbTable {
     }
 
     public Builder status(Account.Status status) {
-      values.put(COL_STATUS, status.code());
+      values.put(COL_STATUS, status.ordinal());
       return this;
     }
 
-    public Builder updated(Date updated) {
-      if (updated == null) {
-        updated = new Date();
-      }
-      values.put(COL_UPDATED, updated.getTime());
-      return this;
-    }
-
-    public Builder created(Date created) {
-      if (created == null) {
-        created = new Date();
-      }
-      values.put(COL_CREATED, created.getTime());
+    private Builder create(long created) {
+      values.put(COL_CREATED, created);
       return this;
     }
 
     public ContentValues build() {
+      values.put(COL_UPDATED, System.currentTimeMillis());
       return values;
     }
   }

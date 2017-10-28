@@ -1,26 +1,14 @@
 <resources>
   <string name="app_name">兰达尔</string>
 
-  <!-- Strings related to login -->
-  <string name="prompt_email">Email</string>
-  <string name="prompt_password">Password (optional)</string>
-  <string name="action_sign_in">Sign in or register</string>
-  <string name="action_sign_in_short">Sign in</string>
-  <string name="error_invalid_email">This email address is invalid</string>
-  <string name="error_invalid_password">This password is too short</string>
-  <string name="error_incorrect_password">This password is incorrect</string>
-  <string name="error_field_required">This field is required</string>
-  <string name="permission_rationale">"Contacts permissions are needed for providing email
-    completions."
-  </string>
   <string name="label_home">选择账号</string>
-  <string name="empty_icon">没有任何数据的图标</string>
-  <string name="empty_hint">很抱歉，没有任何数据</string>
+  <string name="empty_icon">空数据图标</string>
+  <string name="empty_hint">抱歉，没有任何数据</string>
   <string name="add_uid">添加账号</string>
   <string name="welcome_header">开启地狱之门</string>
-  <string name="welcome_text">地狱之门是一款网页游戏，游戏里的主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n转生职业：盾战、武器、狂战、神法、火法、冰法、暗杀、天弓、神射。\n免费副本、攻城活动、深渊暮色。\n项目开源：https://github.com/mrzhqiang/Randall</string>
+  <string name="welcome_text">地狱之门是一款网页游戏，游戏里的主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n攻城、副本、深渊、凝练。\n开源：https://github.com/mrzhqiang/Randall</string>
   <string name="application_logo">应用图标</string>
-  <string name="welcome_developer">兰达尔由 mrzhqiang 开发，欢迎start仓库</string>
+  <string name="welcome_developer">兰达尔由 mrzhqiang 开发，欢迎start</string>
   <string name="other_game">其他游戏</string>
   <string name="uid">用户名/uid</string>
   <string name="password">密码(6–15位数字或字母)</string>
@@ -29,7 +17,9 @@
   <string name="register">注册</string>
   <string name="game_logo">游戏图标</string>
   <string name="game_icon">游戏图标</string>
-  <string name="random_password">随机密码</string>
   <string name="load_failed_retry">加载失败,点击重试</string>
   <string name="char_number">1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
+  <string name="register_new_account">注册账号</string>
+  <string name="add">添加</string>
+  <string name="random_password">随机密码</string>
 </resources>

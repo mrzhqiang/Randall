@@ -40,7 +40,7 @@ public final class RandallModel {
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber));
   }
 
-  public void exitModel() {
+  public void cancelSubscriber() {
     subscriptions.unsubscribe();
   }
 }

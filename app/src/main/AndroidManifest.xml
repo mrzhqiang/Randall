@@ -28,7 +28,7 @@
         android:launchMode="singleTask"/>
 
     <activity
-        android:name=".ui.AddUidActivity"
+        android:name=".ui.NewAccountActivity"
         android:label="@string/add_uid"
         android:launchMode="singleTask"/>
 

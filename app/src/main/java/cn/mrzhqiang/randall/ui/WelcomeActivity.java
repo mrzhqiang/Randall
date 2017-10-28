@@ -19,7 +19,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override public void onClick(View v) {
       // 这样写的话，可以搬到任何位置
       Context context = v.getContext();
-      Intent intent = new Intent(context, AddUidActivity.class);
+      Intent intent = new Intent(context, NewAccountActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
       context.startActivity(intent);
     }

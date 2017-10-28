@@ -9,13 +9,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.databinding.ActivityRandallBinding;
 import cn.mrzhqiang.randall.model.AccountModel;
+import cn.mrzhqiang.randall.net.Result;
 import java.util.List;
-import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * 兰达尔主页，展示当前游戏内容
@@ -26,36 +26,8 @@ public class RandallActivity extends AppCompatActivity {
 
   private final AccountModel accountModel = new AccountModel();
 
-  private Subscription accountSub;
-
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //对账户进行监听
-    accountSub = accountModel.queryAccountList(new Action1<List<Account>>() {
-      @Override public void call(List<Account> accounts) {
-        if (isFinishing()) {
-          return;
-        }
-        if (accounts.size() == 0) {
-          Intent intent = new Intent(RandallActivity.this, WelcomeActivity.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);
-          finish();
-          return;
-        }
-
-        accountList.clear();
-        accountList.addAll(accounts);
-
-        // 这里是测试方法
-        StringBuilder builder = new StringBuilder();
-        for (Account account : accounts) {
-          builder.append(account.toString());
-        }
-        new AlertDialog.Builder(RandallActivity.this).setMessage(builder.toString()).show();
-      }
-    });
-
     ActivityRandallBinding binding =
         DataBindingUtil.setContentView(this, R.layout.activity_randall);
     binding.setRandall(this);
@@ -71,15 +43,49 @@ public class RandallActivity extends AppCompatActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_add_uid:
-        Intent intent = new Intent(this, AddUidActivity.class);
+        Intent intent = new Intent(this, NewAccountActivity.class);
         startActivity(intent);
         return true;
     }
     return super.onOptionsItemSelected(item);
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    accountSub.unsubscribe();
+  @Override protected void onResume() {
+    super.onResume();
+    // 对账户进行监听
+    accountModel.queryAccountList(new Result<List<Account>>() {
+      @Override public void onSuccessful(List<Account> result) {
+        if (isFinishing()) {
+          return;
+        }
+        if (result.size() == 0) {
+          Intent intent = new Intent(RandallActivity.this, WelcomeActivity.class);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+          startActivity(intent);
+          finish();
+          return;
+        }
+
+        accountList.clear();
+        accountList.addAll(result);
+
+        // 这里是测试方法
+        StringBuilder builder = new StringBuilder();
+        for (Account account : result) {
+          builder.append(account.toString());
+        }
+        new AlertDialog.Builder(RandallActivity.this).setMessage(builder.toString()).show();
+      }
+
+      @Override public void onFailed(String message) {
+        // TODO 做一些处理
+        Toast.makeText(RandallActivity.this, message, Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    accountModel.cancelSubscriber();
   }
 }

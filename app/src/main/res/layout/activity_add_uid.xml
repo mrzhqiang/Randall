@@ -6,8 +6,8 @@
     >
   <data>
     <variable
-        name="addUid"
-        type="cn.mrzhqiang.randall.ui.AddUidActivity"
+        name="newAccountVM"
+        type="cn.mrzhqiang.randall.viewmodel.NewAccountViewModel"
         />
   </data>
   <LinearLayout
@@ -35,25 +35,11 @@
           android:layout_height="45dp"
           android:layout_gravity="center"
           android:contentDescription="@string/game_logo"
-          android:visibility="@{addUid.logoVisibility}"
-          app:gameLogo="@{addUid.gamePath}"
-          tools:visibility="gone"
+          app:gameLogo="@{newAccountVM.logoPath}"
           />
-      <Button
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:text="@string/load_failed_retry"
-          android:visibility="@{addUid.retryVisibility}"
-          android:onClick="@{addUid.loadHome}"
-          style="@style/Widget.AppCompat.Button.Borderless.Colored"
-          tools:visibility="gone"
-          />
-      <ProgressBar
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:visibility="@{addUid.loadVisibility}"
-          android:layout_gravity="center"
+      <include
+          layout="@layout/layout_loading"
+          app:loading="@{newAccountVM.loading}"
           />
     </FrameLayout>
     <LinearLayout
@@ -63,54 +49,18 @@
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         >
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:counterEnabled="true"
-          app:counterMaxLength="15"
-          app:error="@{addUid.usernameError}"
-          app:errorEnabled="true"
-          >
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/uid"
-            android:inputType="textVisiblePassword"
-            android:digits="@string/char_number"
-            android:text="@={addUid.username}"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            />
-      </android.support.design.widget.TextInputLayout>
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:error="@{addUid.passwordError}"
-          app:errorEnabled="true"
-          app:passwordToggleEnabled="true"
-          >
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:enabled="@{addUid.passwordEnabled}"
-            android:text="@={addUid.password}"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            />
-      </android.support.design.widget.TextInputLayout>
-      <!--suppress AndroidUnknownAttribute -->
-      <CheckBox
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/random_password"
-          android:checked="true"
-          android:textColor="@color/colorAccent"
-          app:buttonTint="@color/colorAccent"
-          android:onCheckedChanged="@{addUid.randomPassword}"
+      <include
+          layout="@layout/layout_input"
+          app:input="@{newAccountVM.inputUsername}"
+          />
+      <include
+          layout="@layout/layout_input"
+          app:input="@{newAccountVM.inputPassword}"
           />
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
           android:orientation="horizontal"
           >
         <TextView
@@ -121,34 +71,19 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{addUid.chooseServer}"
-            android:text="@={addUid.serverName}"
+            android:onClick="@{newAccountVM.chooseServer}"
+            android:text="@={newAccountVM.serverName}"
             tools:text="[永恒]"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             />
       </LinearLayout>
-      <LinearLayout
+      <Button
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          >
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="@{addUid.register}"
-            android:text="@string/register"
-            style="@style/Widget.AppCompat.Button.Colored"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="@{addUid.login}"
-            android:text="@string/login"
-            style="@style/Widget.AppCompat.Button.Colored"
-            />
-      </LinearLayout>
+          android:onClick="@{newAccountVM.addAccount}"
+          android:text="@string/add"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
     </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -159,7 +94,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:text="@{addUid.gameInfo}"
+          android:text="@{newAccountVM.gameInfo}"
           tools:text="荣唐科技 10-20 15:09"
           />
     </FrameLayout>

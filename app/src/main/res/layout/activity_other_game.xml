@@ -17,8 +17,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/other_game"
         app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="@string/other_game"
         >
     </android.support.v7.widget.Toolbar>
     <include

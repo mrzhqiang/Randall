@@ -3,6 +3,7 @@ package cn.mrzhqiang.randall.model;
 import android.database.Cursor;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 import cn.mrzhqiang.randall.RandallApp;
 import cn.mrzhqiang.randall.data.Account;
@@ -14,11 +15,10 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * 账户模块，包含所有与之相关的网络/本地逻辑
@@ -40,74 +40,67 @@ public final class AccountModel {
   @Inject Randall randall;
   @Inject BriteDatabase db;
 
+  private final CompositeSubscription subscription = new CompositeSubscription();
+
   public AccountModel() {
     RandallApp.appComponent().inject(this);
   }
 
   // 网络相关的有，验证账户、登录账户/角色，等等。
 
-  /** 添加账户到本地，没有做网络验证 */
-  public void addAccount(@NonNull Account account, @NonNull Subscriber<Boolean> subscriber) {
-    Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Boolean>() {
-      @Override public Boolean call(Account account) {
-        long id = db.insert(AccountTable.NAME, AccountTable.toContentValues(account));
-        if (id > 0) {
-          account.id = id;
-          return true;
+  /** 添加账户到本地 */
+  public void addAccount(@NonNull Account account, @NonNull Subscriber<Long> subscriber) {
+    Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Long>() {
+      @Override public Long call(Account account) {
+        if (checkExists(account.username)) {
+          throw new RuntimeException("账号已经存在");
         }
-        return false;
+        // TODO 做一次网络验证，以确定status
+        return db.insert(AccountTable.NAME, AccountTable.toContentValues(account));
       }
     }).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
   }
 
   /** 从本地删除一个账户，这里应该是一个延迟操作，可以撤销 */
-  public void deleteAccount(@NonNull Account account, @NonNull Action1<Boolean> action1) {
-    Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Boolean>() {
-      @Override public Boolean call(Account account) {
-        if (account.id > 0) {
-          int row =
-              db.delete(AccountTable.NAME, AccountTable.COL_ID + "=?", String.valueOf(account.id));
-          if (row > 0) {
-            return true;
-          }
-        }
-        return false;
+  public void deleteAccount(long id, @NonNull Subscriber<Integer> subscriber) {
+    Observable.just(id).subscribeOn(Schedulers.io()).map(new Func1<Long, Integer>() {
+      @Override public Integer call(Long id) {
+        return db.delete(AccountTable.NAME, AccountTable.COL_ID + "=?", String.valueOf(id));
       }
-    }).observeOn(AndroidSchedulers.mainThread()).subscribe(action1);
+    }).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
   }
 
-  // TODO 这个方法应该拆分一下
-  public void updateAccount(@NonNull Account account, @NonNull Action1<Boolean> action1) {
-    Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Boolean>() {
-      @Override public Boolean call(Account account) {
-        if (account.id > 0) {
-          long row = db.update(AccountTable.NAME,
-              new AccountTable.Builder().password(account.password)
-                  .alias(account.alias)
-                  .updated(account.updated)
-                  .status(account.status)
-                  .build(), AccountTable.COL_ID + "=?", String.valueOf(account.id));
-          return row == 1;
-        }
-        return false;
-      }
-    }).observeOn(AndroidSchedulers.mainThread()).subscribe(action1);
+  /** 更新账号的相关信息，*/
+  public void updateAccount(final long id, @NonNull AccountTable.Builder builder,
+      @NonNull Subscriber<Integer> subscriber) {
+    Observable.just(builder)
+        .subscribeOn(Schedulers.io())
+        .map(new Func1<AccountTable.Builder, Integer>() {
+          @Override public Integer call(AccountTable.Builder builder) {
+            return db.update(AccountTable.NAME, builder.build(), AccountTable.COL_ID + "=?",
+                String.valueOf(id));
+          }
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(subscriber);
   }
 
   /** 查询数据库是否存在账户列表，将以订阅的方式保持监听，一旦账户数量清零，则应该执行对应操作 */
-  @CheckResult public Subscription queryAccountList(Action1<List<Account>> action1) {
-    String delete = String.valueOf(Account.Status.DELETE.code());
-    return db.createQuery(AccountTable.NAME, QUERY_ACCOUNT_LIST, delete)
+  public void queryAccountList(Subscriber<List<Account>> subscriber) {
+    String delete = String.valueOf(Account.Status.DELETE.ordinal());
+    subscription.add(db.createQuery(AccountTable.NAME, QUERY_ACCOUNT_LIST, delete)
         .mapToList(AccountTable.MAPPER)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(action1, new Action1<Throwable>() {
-          @Override public void call(Throwable throwable) {
-            Log.e(TAG, "查询账户失败：" + throwable.getMessage());
-          }
-        });
+        .subscribe(subscriber));
   }
 
-  public boolean checkExists(String mUsername) {
+  /** 取消这个主题订阅，应该在onPause中调用 */
+  public void cancelSubscriber() {
+    subscription.unsubscribe();
+  }
+
+  /** 检测账号是否已存在 */
+  @WorkerThread @CheckResult private boolean checkExists(String mUsername) {
     try {
       Cursor cursor = db.query(QUERY_USERNAME, Db.encode(mUsername));
       if (cursor != null) {
@@ -120,8 +113,9 @@ public final class AccountModel {
         }
       }
     } catch (Exception e) {
-      Log.e(TAG, "检查账号是否重复出错：" + e.getMessage());
+      Log.e(TAG, "检查账号出错：" + e.getMessage());
     }
     return false;
   }
+
 }

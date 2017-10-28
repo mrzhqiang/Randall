@@ -24,7 +24,7 @@ public class OtherGameActivity extends AppCompatActivity {
 
     setSupportActionBar(binding.toolbar);
 
-    empty.setHint("对其他游戏的支持，请等待下一次版本更新");
+    empty.setHint("对其他游戏的支持，请等待后续支持");
     empty.setIcon(R.drawable.ic_empty_wait_update);
   }
 

@@ -1,8 +1,5 @@
 package cn.mrzhqiang.randall.data;
 
-import cn.mrzhqiang.helper.TimeHelper;
-import java.util.Date;
-
 /**
  * 用户账户，包括uid、用户名、密码，以及相应的本地属性
  */
@@ -11,8 +8,6 @@ public final class Account {
   /** 数据库id，用来更新字段或删除记录 */
   public long id = 0;
 
-  /** 地狱之门生成的uid */
-  public long uid;
   /** 用户输入的账号，或未来开发生成小号而自动创建 */
   public String username;
   /** 用户输入的密码，或小号的随机密码 */
@@ -22,11 +17,8 @@ public final class Account {
   public String alias;
   /** 状态：已删除、无效、默认、离线、在线 */
   public Status status = Status.DEFAULT;
-  /** 更新时间：当使用一个账号进入游戏，将获得这个值的更新 */
-  public Date updated;
-  /** 创建时间：默认的排序指标，其他还可以选择：别名、状态、更新时间 */
-  public Date created;
 
+  /** 安全地取得别名 */
   public String alias() {
     if (alias == null) {
       return "账号" + id;
@@ -34,55 +26,23 @@ public final class Account {
     return alias;
   }
 
-  public String update() {
-    if (updated == null) {
-      updated = new Date();
-    }
-    return TimeHelper.showTime(updated);
-  }
-
-  public String create() {
-    if (created == null) {
-      created = new Date();
-    }
-    return TimeHelper.showTime(created);
-  }
-
   @Override public String toString() {
-    return "alias:" + alias + ", status:" + status;
+    return "id:" + id + ", username:" + username + ", alias:" + alias();
   }
 
-  /** 从数据库保存的code生成状态枚举 */
-  public static Status from(int code) {
-    if (code == -2) {
-      return Status.DELETE;
-    }
-    if (code == -1) {
-      return Status.INVALID;
-    }
-    if (code == 1) {
-      return Status.OFFLINE;
-    }
-    if (code == 2) {
-      return Status.ONLINE;
-    }
-    return Status.DEFAULT;
+  /** 通过数据库取出的下标转换为状态枚举 */
+  public static Status from(int index) {
+    return Status.values()[index];
   }
 
+  /** 状态枚举 */
   public enum Status {
-    DELETE("已删除", Integer.MIN_VALUE), INVALID("无效", -1), DEFAULT("未认证", 0), OFFLINE("离线",
-        1), ONLINE("在线", 2),;
+    DELETE("已删除"), INVALID("无效"), DEFAULT("未认证"), OFFLINE("离线"), ONLINE("在线"),;
 
     final String value;
-    final int code;
 
-    Status(String value, int code) {
+    Status(String value) {
       this.value = value;
-      this.code = code;
-    }
-
-    public int code() {
-      return code;
     }
 
     @Override public String toString() {
