@@ -28,5 +28,7 @@ public abstract class Result<T> extends Subscriber<T> {
 
   abstract public void onSuccessful(T result);
 
-  abstract public void onFailed(String message);
+  public void onFailed(String message) {
+    Log.e(TAG, "this: " + this.getClass().getSimpleName() + ", failed: " + message);
+  }
 }

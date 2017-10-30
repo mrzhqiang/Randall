@@ -23,24 +23,55 @@ public final class Home {
     Elements bodyList = body.children();
     Element first = bodyList.first();
     home.fromNode(first);
+
     return home;
   }
 
-  public Element register;
-  public Element login;
-  public Node gamePath;
-  public List<Element> serverList;
-  public Node gameInfo;
+  private Element register;
+  private Element login;
+  private Node gamePath;
+  private List<Element> serverList;
+  private Node gameInfo;
 
   private Home() {
   }
 
-  public String[] asNameList() {
-    String[] names = new String[serverList.size()];
-    for (int i = 0; i < serverList.size(); i++) {
-      names[i] = serverList.get(i).text();
+  public String logoPath() {
+    if (gamePath != null) {
+      return gamePath.absUrl("src");
     }
-    return names;
+    return null;
+  }
+
+  public boolean emptyServer() {
+    return serverList == null || serverList.size() == 0;
+  }
+
+  public String serverName(int index) {
+    if (serverList != null && serverList.size() > 0) {
+      if (index < serverList.size()) {
+        return serverList.get(index).text();
+      }
+    }
+    return null;
+  }
+
+  public String gameInfo() {
+    if (gameInfo != null) {
+      return gameInfo.toString();
+    }
+    return null;
+  }
+
+  public String[] asNameList() {
+    if (serverList != null && serverList.size() > 0) {
+      String[] names = new String[serverList.size()];
+      for (int i = 0; i < serverList.size(); i++) {
+        names[i] = serverList.get(i).text();
+      }
+      return names;
+    }
+    return null;
   }
 
   private void fromNode(Node node) {

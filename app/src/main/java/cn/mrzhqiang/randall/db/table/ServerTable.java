@@ -4,19 +4,17 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.LongSparseArray;
-import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.db.Db;
 import cn.mrzhqiang.randall.db.DbTable;
 import java.util.List;
-import rx.functions.Func1;
 
 /**
- * 账户表，包含字段和创建SQL语句，升级语句
+ * 服务器表，由于新区及合区时间的不确定性，数据应该由某个按钮提供更新
  */
-public final class AccountTable implements DbTable {
+public final class ServerTable implements DbTable {
 
-  /** 提供给BriteDatabase映射字段使用 */
-  public static final Func1<Cursor, Account> MAPPER = new Func1<Cursor, Account>() {
+  /** 提供给BriteDatabase映射字段使用 *//*
+  public static final Func1<Cursor, Server> MAPPER = new Func1<Cursor, Server>() {
     @Override public Account call(Cursor cursor) {
       Account account = new Account();
       account.id = Db.getLong(cursor, AccountTable.COL_ID);
@@ -28,7 +26,7 @@ public final class AccountTable implements DbTable {
     }
   };
 
-  /** 这个方法在插入新账户时使用，要更新这个表的对应字段，请使用Builder类 */
+  *//** 这个方法在插入新账户时使用，要更新这个表的对应字段，请使用Builder类 *//*
   public static ContentValues toContentValues(@NonNull Account account) {
     return new Builder().username(account.username)
         .password(account.password)
@@ -36,42 +34,34 @@ public final class AccountTable implements DbTable {
         .status(account.status)
         .create(System.currentTimeMillis())
         .build();
-  }
+  }*/
 
   ///////////////////////////////////////////////////////////////////////////
-  // 表的相关信息
+  // 表属性
   ///////////////////////////////////////////////////////////////////////////
-  public static final String NAME = "account";
+  public static final String NAME = "server";
 
   public static final String COL_ID = "_id";
-
-  public static final String COL_USERNAME = "username";
-  public static final String COL_PASSWORD = "password";
-
-  public static final String COL_ALIAS = "_alias";// 别名，默认是上次登录服务器名，可以自己定义
-  public static final String COL_STATUS = "status";
-
+  public static final String COL_NAME = "name";
+  public static final String COL_PATH = "path";
+  public static final String COL_ALIAS = "_alias";
   public static final String COL_UPDATED = "updated";
-  public static final String COL_CREATED = "created";
 
   public static final String SQL_CREATE = "CREATE TABLE "
       + NAME
       + " ("
       + COL_ID
       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + COL_USERNAME
-      + " varchar(15) UNIQUE NOT NULL, "
-      + COL_PASSWORD
-      + " varchar(15) NOT NULL, "
+      + COL_NAME
+      + " TEXT UNIQUE NOT NULL, "
+      + COL_PATH
+      + " TEXT NOT NULL, "
       + COL_ALIAS
       + " TEXT, "
-      + COL_STATUS
-      + " INTEGER DEFAULT 0, "
       + COL_UPDATED
-      + " INTEGER NOT NULL, "
-      + COL_CREATED
       + " INTEGER NOT NULL"
       + ");";
+
 
   @NonNull @Override public String getCreateSql() {
     return SQL_CREATE;
@@ -85,28 +75,18 @@ public final class AccountTable implements DbTable {
   public static class Builder {
     private final ContentValues values = new ContentValues();
 
-    private Builder username(@NonNull String username) {
-      values.put(COL_USERNAME, Db.encode(username));
+    private Builder name(@NonNull String name) {
+      values.put(COL_NAME, name);
       return this;
     }
 
-    public Builder password(@NonNull String password) {
-      values.put(COL_PASSWORD, Db.encode(password));
+    public Builder path(@NonNull String path) {
+      values.put(COL_PATH, path);
       return this;
     }
 
     public Builder alias(@NonNull String alias) {
       values.put(COL_ALIAS, alias);
-      return this;
-    }
-
-    public Builder status(Account.Status status) {
-      values.put(COL_STATUS, status.ordinal());
-      return this;
-    }
-
-    private Builder create(long created) {
-      values.put(COL_CREATED, created);
       return this;
     }
 

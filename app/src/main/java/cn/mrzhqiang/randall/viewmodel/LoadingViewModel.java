@@ -14,8 +14,6 @@ public class LoadingViewModel {
 
   public final View.OnClickListener retry = new View.OnClickListener() {
     @Override public void onClick(View v) {
-      retryVisibility.set(View.GONE);
-      loadVisibility.set(View.VISIBLE);
       onRetry(v.getContext());
     }
   };
@@ -30,6 +28,8 @@ public class LoadingViewModel {
   }
 
   public void onRetry(Context context) {
-    // no-op
+    retryVisibility.set(View.GONE);
+    loadVisibility.set(View.VISIBLE);
   }
+
 }

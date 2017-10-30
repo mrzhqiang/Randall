@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import cn.mrzhqiang.randall.R;
-import cn.mrzhqiang.randall.databinding.ActivityAddUidBinding;
+import cn.mrzhqiang.randall.databinding.ActivityNewAccountBinding;
 import cn.mrzhqiang.randall.viewmodel.NewAccountViewModel;
 
 /**
@@ -20,7 +20,8 @@ public class NewAccountActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     viewModel = new NewAccountViewModel();
 
-    ActivityAddUidBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_add_uid);
+    ActivityNewAccountBinding binding =
+        DataBindingUtil.setContentView(this, R.layout.activity_new_account);
     binding.setNewAccountVM(viewModel);
 
     setSupportActionBar(binding.toolbar);
@@ -37,12 +38,12 @@ public class NewAccountActivity extends AppCompatActivity {
 
   @Override protected void onResume() {
     super.onResume();
-    viewModel.showHome(this);
+    viewModel.loadHome(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    // 取消所有操作，追求极致用户体验
-    viewModel.exit();
+    // 取消所有IO请求
+    viewModel.cancelRequest();
   }
 }

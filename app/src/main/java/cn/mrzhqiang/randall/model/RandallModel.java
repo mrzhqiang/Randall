@@ -22,7 +22,7 @@ public final class RandallModel {
   @Inject Randall randall;
   @Inject BriteDatabase db;
 
-  private final CompositeSubscription subscriptions = new CompositeSubscription();
+  public final CompositeSubscription subscriptions = new CompositeSubscription();
 
   public RandallModel() {
     RandallApp.appComponent().inject(this);
@@ -40,7 +40,4 @@ public final class RandallModel {
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber));
   }
 
-  public void cancelSubscriber() {
-    subscriptions.unsubscribe();
-  }
 }

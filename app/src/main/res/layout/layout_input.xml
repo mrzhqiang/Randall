@@ -26,7 +26,9 @@
         android:hint="@{input.hint}"
         android:inputType="@{input.inputType}"
         android:text="@={input.text}"
+        android:textAppearance="@style/TextAppearance.AppCompat"
         tools:hint="请输入"
         />
+    <!--TODO textAppearance 可定制-->
   </android.support.design.widget.TextInputLayout>
 </layout>

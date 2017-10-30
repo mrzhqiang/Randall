@@ -8,9 +8,14 @@ import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 
 /**
- * 输入账号密码，实际上也可以做成单个输入
+ * 单个输入框
  */
 public class InputViewModel {
+
+  public enum Type {
+    USERNAME, PASSWORD,
+  }
+
   private static final String DIGITS =
       "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
@@ -40,6 +45,19 @@ public class InputViewModel {
   public final ObservableInt inputType = new ObservableInt(InputType.TYPE_CLASS_TEXT);
   public final ObservableField<String> text = new ObservableField<>();
 
+  public InputViewModel(Type type) {
+    switch (type) {
+      case USERNAME:
+        initUsername();
+        break;
+      case PASSWORD:
+        initPassword();
+        break;
+      default:
+        break;
+    }
+  }
+
   public String takeText() {
     return text.get();
   }
@@ -52,7 +70,7 @@ public class InputViewModel {
     enabled.set(value);
   }
 
-  public void initUsername() {
+  private void initUsername() {
     counterEnabled.set(true);
     counterMaxLength.set(15);
     errorEnabled.set(true);
@@ -61,7 +79,7 @@ public class InputViewModel {
     inputType.set(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
   }
 
-  public void initPassword() {
+  private void initPassword() {
     errorEnabled.set(true);
     passwordToggleEnabled.set(true);
     digits.set(DIGITS);
