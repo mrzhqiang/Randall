@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:title="@string/other_game"
-        >
-    </android.support.v7.widget.Toolbar>
+        />
     <include
         layout="@layout/layout_empty"
         app:empty="@{otherGame.empty}"

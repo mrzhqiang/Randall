@@ -6,8 +6,8 @@
     >
   <data>
     <variable
-        name="newAccountVM"
-        type="cn.mrzhqiang.randall.viewmodel.NewAccountViewModel"
+        name="addAccount"
+        type="cn.mrzhqiang.randall.viewmodel.AddAccountViewModel"
         />
   </data>
   <LinearLayout
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:title="@string/new_account"
+        app:title="@string/add_account"
         >
     </android.support.v7.widget.Toolbar>
     <FrameLayout
@@ -35,27 +35,29 @@
           android:layout_height="45dp"
           android:layout_gravity="center"
           android:contentDescription="@string/game_logo"
-          app:gameLogo="@{newAccountVM.logoPath}"
+          app:gameLogo="@{addAccount.logoPath}"
           />
       <include
           layout="@layout/layout_loading"
-          app:loading="@{newAccountVM.loading}"
+          app:loading="@{addAccount.loading}"
           />
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingBottom="8dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
+        android:paddingTop="8dp"
         >
       <include
           layout="@layout/layout_input"
-          app:input="@{newAccountVM.inputUsername}"
+          app:input="@{addAccount.inputUsername}"
           />
       <include
           layout="@layout/layout_input"
-          app:input="@{newAccountVM.inputPassword}"
+          app:input="@{addAccount.inputPassword}"
           />
       <LinearLayout
           android:layout_width="match_parent"
@@ -71,9 +73,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="@{newAccountVM.chooseEnabled}"
-            android:onClick="@{newAccountVM.chooseServer}"
-            android:text="@={newAccountVM.serverName}"
+            android:enabled="@{addAccount.chooseEnabled}"
+            android:onClick="@{addAccount.chooseServer}"
+            android:text="@={addAccount.serverName}"
             tools:text="[永恒]"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             />
@@ -81,8 +83,8 @@
       <Button
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:enabled="@{newAccountVM.addEnabled}"
-          android:onClick="@{newAccountVM.addAccount}"
+          android:enabled="@{addAccount.addEnabled}"
+          android:onClick="@{addAccount.addAccount}"
           android:text="@string/add"
           style="@style/Widget.AppCompat.Button.Colored"
           />
@@ -96,7 +98,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:text="@{newAccountVM.gameInfo}"
+          android:text="@{addAccount.gameInfo}"
           tools:text="荣唐科技 10-20 15:09"
           />
     </FrameLayout>

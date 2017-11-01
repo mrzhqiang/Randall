@@ -13,18 +13,18 @@ import org.jsoup.select.Elements;
 /**
  * 主页，由网页内容经由Jsoup解析后归档
  */
-public final class Home {
-  private static final String TAG = "Home";
+public final class HomePage {
+  private static final String TAG = "HomePage";
 
-  @CheckResult @WorkerThread public static Home parse(Document document) {
-    Home home = new Home();
+  @CheckResult @WorkerThread public static HomePage parse(Document document) {
+    HomePage homePage = new HomePage();
 
     Element body = document.body();
     Elements bodyList = body.children();
     Element first = bodyList.first();
-    home.fromNode(first);
+    homePage.fromNode(first);
 
-    return home;
+    return homePage;
   }
 
   private Element register;
@@ -33,7 +33,15 @@ public final class Home {
   private List<Element> serverList;
   private Node gameInfo;
 
-  private Home() {
+  private HomePage() {
+  }
+
+  public Element getRegister() {
+    return register;
+  }
+
+  public Element getLogin() {
+    return login;
   }
 
   public String logoPath() {

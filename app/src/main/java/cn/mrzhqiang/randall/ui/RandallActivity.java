@@ -43,7 +43,7 @@ public class RandallActivity extends AppCompatActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_add_uid:
-        Intent intent = new Intent(this, NewAccountActivity.class);
+        Intent intent = new Intent(this, AddAccountActivity.class);
         startActivity(intent);
         return true;
     }
@@ -53,7 +53,7 @@ public class RandallActivity extends AppCompatActivity {
   @Override protected void onResume() {
     super.onResume();
     // 对账户进行监听
-    accountModel.queryAccountList(new Result<List<Account>>() {
+    accountModel.queryList(new Result<List<Account>>() {
       @Override public void onSuccessful(List<Account> result) {
         if (isFinishing()) {
           return;
@@ -86,6 +86,6 @@ public class RandallActivity extends AppCompatActivity {
 
   @Override protected void onPause() {
     super.onPause();
-    accountModel.cancelSubscriber();
+    accountModel.cancel();
   }
 }

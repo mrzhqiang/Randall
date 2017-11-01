@@ -15,11 +15,11 @@ import cn.mrzhqiang.randall.databinding.ActivityWelcomeBinding;
  */
 public class WelcomeActivity extends AppCompatActivity {
 
-  public final View.OnClickListener addUid = new View.OnClickListener() {
+  public final View.OnClickListener addAccount = new View.OnClickListener() {
     @Override public void onClick(View v) {
       // 这样写的话，可以搬到任何位置
       Context context = v.getContext();
-      Intent intent = new Intent(context, NewAccountActivity.class);
+      Intent intent = new Intent(context, AddAccountActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
       context.startActivity(intent);
     }

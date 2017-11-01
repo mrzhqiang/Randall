@@ -5,11 +5,18 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import cn.mrzhqiang.randall.RandallApp;
 import cn.mrzhqiang.randall.data.Account;
+import cn.mrzhqiang.randall.data.LoginPage;
+import cn.mrzhqiang.randall.data.RegisterPage;
 import cn.mrzhqiang.randall.db.Db;
 import cn.mrzhqiang.randall.net.Randall;
 import com.squareup.sqlbrite.BriteDatabase;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -55,7 +62,7 @@ public final class AccountModel {
             if (checkExists(account.username())) {
               throw new RuntimeException("账号已经存在");
             }
-            // TODO 做一次网络验证，以确定status
+
             return db.insert(Account.NAME, new Account.Builder(account).build());
           }
         })
@@ -99,7 +106,7 @@ public final class AccountModel {
   }
 
   /** 查询数据库是否存在账户列表，将以订阅的方式保持监听，一旦账户数量清零，则应该执行对应操作 */
-  public void queryAccountList(Subscriber<List<Account>> subscriber) {
+  public void queryList(Subscriber<List<Account>> subscriber) {
     String delete = String.valueOf(Account.Status.DELETE.ordinal());
     subscription.add(db.createQuery(Account.NAME, QUERY_LIST, delete)
         .mapToList(Account.MAPPER)
@@ -108,7 +115,7 @@ public final class AccountModel {
   }
 
   /** 取消这个主题订阅，应该在onPause中调用 */
-  public void cancelSubscriber() {
+  public void cancel() {
     subscription.unsubscribe();
   }
 

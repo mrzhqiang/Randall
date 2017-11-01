@@ -9,8 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import cn.mrzhqiang.randall.data.Account;
-import cn.mrzhqiang.randall.data.Home;
+import cn.mrzhqiang.randall.data.HomePage;
+import cn.mrzhqiang.randall.data.LoginPage;
 import cn.mrzhqiang.randall.model.AccountModel;
 import cn.mrzhqiang.randall.model.RandallModel;
 import cn.mrzhqiang.randall.net.Result;
@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 /**
  * 新的账号：先添加到本地数据库，同时验证账号密码是否有效；当不存在时，可选注册
  */
-public final class NewAccountViewModel {
+public final class AddAccountViewModel {
 
   @BindingAdapter("gameLogo") public static void showGameLogo(ImageView view, String path) {
     if (path != null && path.length() > 0) {
@@ -48,10 +48,10 @@ public final class NewAccountViewModel {
     @Override public void onClick(View v) {
       Context context = v.getContext();
       new AlertDialog.Builder(context).setTitle("选择服务器")
-          .setSingleChoiceItems(home.asNameList(), index, new DialogInterface.OnClickListener() {
+          .setSingleChoiceItems(homePage.asNameList(), index, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
               index = which;
-              serverName.set(home.serverName(index));
+              serverName.set(homePage.serverName(index));
               dialog.dismiss();
             }
           })
@@ -67,25 +67,29 @@ public final class NewAccountViewModel {
       inputUsername.showError(null);
       inputPassword.showError(null);
 
-      String username = inputUsername.takeText();
-      if (!checkUsername(username)) {
+      final String username = inputUsername.takeText();
+      if (username == null || !checkUsername(username)) {
         inputUsername.showError("请输入7-15位数字或字母");
         return;
       }
 
-      String password = inputPassword.takeText();
-      if (!checkPassword(password)) {
+      final String password = inputPassword.takeText();
+      if (password==null || !checkPassword(password)) {
         inputPassword.showError("请输入6-15位数字或字母");
         return;
       }
 
+      // TODO 可以先插入数据，然后拿账号密码登录，根据返回值修改对应状态
+      // 如果账号没有注册，返回-1，这里提示是否注册
+      // （如果勾选了注册账号则直接调用注册接口——这只是一个设想，实现有难度）
+      // 如果账号注册失败，则显示相关提示，不再有其他逻辑
+      // 如果注册成功，提示是否登录：是则继续登录；否则关闭对话框
       accountModel.addAccount(username, password, new Result<Long>() {
         @Override public void onSuccessful(Long result) {
           if (result > 0) {
             Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
+
             // 确认是否使用默认别名
-          } else if (result == -1) {
-            // 提示是否注册
           }
         }
 
@@ -99,27 +103,41 @@ public final class NewAccountViewModel {
   private final AccountModel accountModel = new AccountModel();
   private final RandallModel randallModel = new RandallModel();
 
-  private Home home;
+  private HomePage homePage;
   private int index = 0;
+  private LoginPage loginPage;
 
   /** 加载主页数据 */
   public void loadHome(final Context context) {
-    randallModel.loadHome(new Result<Home>() {
-      @Override public void onSuccessful(Home result) {
+    randallModel.loadHome(new Result<HomePage>() {
+      @Override public void onSuccessful(HomePage result) {
         if (result == null || result.emptyServer()) {
           loading.loadFailed();
           Toast.makeText(context, "数据异常，请重试", Toast.LENGTH_SHORT).show();
           return;
         }
 
-        home = result;
-        logoPath.set(home.logoPath());
-        serverName.set(home.serverName(index));
-        gameInfo.set(home.gameInfo());
+        homePage = result;
+        logoPath.set(homePage.logoPath());
+        serverName.set(homePage.serverName(index));
+        gameInfo.set(homePage.gameInfo());
 
         chooseEnabled.set(true);
         addEnabled.set(true);
-        loading.loadSuccessful();
+
+        // 打开登录页面；TODO 注册页面应该提供一个按钮，点击按钮则加载注册页面
+        randallModel.loadLogin(homePage.getLogin(), new Result<LoginPage>() {
+          @Override public void onSuccessful(LoginPage result) {
+            loginPage = result;
+            loading.loadSuccessful();
+          }
+
+          @Override public void onFailed(String message) {
+            super.onFailed(message);
+            Toast.makeText(context, "加载失败：" + message, Toast.LENGTH_SHORT).show();
+            loading.loadFailed();
+          }
+        });
       }
 
       @Override public void onFailed(String message) {
@@ -131,7 +149,7 @@ public final class NewAccountViewModel {
   }
 
   /** 取消请求，交让出资源给其他页面 */
-  public void cancelRequest() {
+  public void cancel() {
     randallModel.subscriptions.unsubscribe();
   }
 

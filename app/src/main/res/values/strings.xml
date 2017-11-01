@@ -5,26 +5,22 @@
   <item name="visible" type="id"/>
   <item name="masked" type="id"/>
 
-  <string name="label_home">选择账号</string>
-  <string name="empty_icon">空数据图标</string>
-  <string name="empty_hint">抱歉，没有任何数据</string>
-  <string name="new_account">新建账号</string>
-  <string name="add_uid">添加账号</string>
+  <!--Welcome-->
+  <string name="application_logo">应用图标</string>
   <string name="welcome_header">开启地狱之门</string>
   <string name="welcome_text">地狱之门是一款网页游戏，游戏里的主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n攻城、副本、深渊、凝练。\n开源：https://github.com/mrzhqiang/Randall</string>
-  <string name="application_logo">应用图标</string>
-  <string name="welcome_developer">兰达尔由 mrzhqiang 开发，欢迎start</string>
+  <string name="add_account">添加账号</string>
   <string name="other_game">其他游戏</string>
-  <string name="uid">用户名/uid</string>
-  <string name="password">密码(6–15位数字或字母)</string>
-  <string name="choose_hint">当前服务器：</string>
-  <string name="login">登录</string>
-  <string name="register">注册</string>
+  <string name="welcome_developer">兰达尔由 mrzhqiang 开发，欢迎start</string>
+
+  <!--NewAccount-->
   <string name="game_logo">游戏图标</string>
-  <string name="game_icon">游戏图标</string>
   <string name="load_failed_retry">加载失败,点击重试</string>
-  <string name="char_number">1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
-  <string name="register_account">注册账号</string>
+  <string name="choose_hint">当前服务器：</string>
   <string name="add">添加</string>
-  <string name="random_password">随机密码</string>
+
+  <!--Empty-->
+  <string name="empty_icon">空数据图标</string>
+  <string name="empty_hint">抱歉，没有任何数据</string>
+
 </resources>

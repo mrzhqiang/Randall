@@ -23,7 +23,7 @@ public class JsoupUnitTest {
       new SimpleDateFormat("HH-mm-ss_SSS", Locale.getDefault());
 
   public static void main(String[] args) throws IOException {
-    URL url = new URL("http://haowanba.com");
+    URL url = new URL("http://haowanba.com/cardh.php?action=register");
     Document home = Jsoup.parse(url, (int) TimeUnit.SECONDS.toMillis(10));
     System.out.println(home);
     String title = home.title();

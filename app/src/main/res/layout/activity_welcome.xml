@@ -68,8 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            android:onClick="@{welcome.addUid}"
-            android:text="@string/add_uid"
+            android:onClick="@{welcome.addAccount}"
+            android:text="@string/add_account"
             style="@style/Widget.AppCompat.Button.Colored"
             />
         <Button

@@ -85,8 +85,8 @@ import rx.functions.Func1;
 
     public Builder(Account account) {
       values.put(COL_USERNAME, Db.encode(account.username()));
-      values.put(COL_PASSWORD, Db.encode(account.password()));
-      values.put(COL_STATUS, account.status().ordinal());
+      password(account.password());
+      status(account.status());
     }
 
     public Builder password(@NonNull String password) {

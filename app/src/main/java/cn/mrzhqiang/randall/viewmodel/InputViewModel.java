@@ -75,7 +75,7 @@ public class InputViewModel {
     counterMaxLength.set(15);
     errorEnabled.set(true);
     digits.set(DIGITS);
-    hint.set("用户名/uid");
+    hint.set("用户名");
     inputType.set(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
   }
 
@@ -83,7 +83,7 @@ public class InputViewModel {
     errorEnabled.set(true);
     passwordToggleEnabled.set(true);
     digits.set(DIGITS);
-    hint.set("密码(6–15位数字或字母)");
+    hint.set("密码");
     inputType.set(InputType.TYPE_TEXT_VARIATION_PASSWORD);
   }
 }
