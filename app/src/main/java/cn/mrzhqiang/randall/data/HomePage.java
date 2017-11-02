@@ -51,33 +51,17 @@ public final class HomePage {
     return null;
   }
 
-  public boolean emptyServer() {
-    return serverList == null || serverList.size() == 0;
+  public List<Element> getServerList() {
+    return serverList;
   }
 
-  public String serverName(int index) {
-    if (serverList != null && serverList.size() > 0) {
-      if (index < serverList.size()) {
-        return serverList.get(index).text();
-      }
-    }
-    return null;
+  public boolean emptyServer() {
+    return serverList == null || serverList.size() == 0;
   }
 
   public String gameInfo() {
     if (gameInfo != null) {
       return gameInfo.toString();
-    }
-    return null;
-  }
-
-  public String[] asNameList() {
-    if (serverList != null && serverList.size() > 0) {
-      String[] names = new String[serverList.size()];
-      for (int i = 0; i < serverList.size(); i++) {
-        names[i] = serverList.get(i).text();
-      }
-      return names;
     }
     return null;
   }

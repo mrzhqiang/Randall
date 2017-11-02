@@ -13,14 +13,23 @@
   <string name="other_game">其他游戏</string>
   <string name="welcome_developer">兰达尔由 mrzhqiang 开发，欢迎start</string>
 
-  <!--NewAccount-->
-  <string name="game_logo">游戏图标</string>
-  <string name="load_failed_retry">加载失败,点击重试</string>
+  <!--EditAccount-->
+  <string name="char_number">1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
+  <string name="username_hint">用户名/uid</string>
+  <string name="password_hint">密码(6–15位数字或字母)</string>
   <string name="choose_hint">当前服务器：</string>
-  <string name="add">添加</string>
+  <string name="register_new_account">在服务器上注册新账户</string>
+
+  <!--Loading-->
+  <string name="load_failed_retry">加载失败,点击重试</string>
+
+  <!--AddAccount-->
+  <string name="game_logo">游戏图标</string>
+  <string name="next">下一步</string>
 
   <!--Empty-->
   <string name="empty_icon">空数据图标</string>
   <string name="empty_hint">抱歉，没有任何数据</string>
+
 
 </resources>
