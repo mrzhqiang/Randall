@@ -1,6 +1,7 @@
 package cn.mrzhqiang.randall.net;
 
 import android.util.Log;
+import java.net.UnknownHostException;
 import rx.Subscriber;
 
 /**
@@ -14,7 +15,10 @@ public abstract class Result<T> extends Subscriber<T> {
   }
 
   @Override public void onError(Throwable e) {
-    Log.d(TAG, "请求错误：" + e.getMessage());
+    if (e instanceof UnknownHostException) {
+      onFailed("链接异常，请检查网络");
+      return;
+    }
     onFailed(e.getMessage());
   }
 

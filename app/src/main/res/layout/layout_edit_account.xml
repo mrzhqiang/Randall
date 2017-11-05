@@ -62,7 +62,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:onClick="@{editAccount.chooseServer}"
-          android:text="@={editAccount.serverName}"
+          android:text="@{editAccount.serverName}"
           tools:text="[永恒]"
           style="@style/Widget.AppCompat.Button.Borderless.Colored"
           />
@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:onCheckedChanged="@{editAccount.registerChanged}"
         android:text="@string/register_new_account"
+        android:checked="false"
         android:textColor="@color/colorAccent"
         app:buttonTint="@color/colorAccent"
         />

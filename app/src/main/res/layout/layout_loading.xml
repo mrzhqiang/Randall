@@ -13,12 +13,13 @@
       android:layout_height="match_parent"
       android:gravity="center"
       android:orientation="vertical"
+      android:visibility="@{loading.visibility}"
       >
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:onClick="@{loading.retry}"
+        android:onClick="@{(v)->loading.clickRetry()}"
         android:text="@string/load_failed_retry"
         android:visibility="@{loading.retryVisibility}"
         tools:visibility="gone"
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="@{loading.loadVisibility}"
-        tools:visibility="visible"
+        tools:visibility="gone"
         />
   </FrameLayout>
 </layout>

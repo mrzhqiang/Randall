@@ -15,6 +15,7 @@ import android.widget.Toast;
 import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.data.HomePage;
 import cn.mrzhqiang.randall.data.LoginPage;
+import cn.mrzhqiang.randall.data.RegisterPage;
 import cn.mrzhqiang.randall.databinding.ActivityAddAccountBinding;
 import cn.mrzhqiang.randall.model.AccountModel;
 import cn.mrzhqiang.randall.model.RandallModel;
@@ -24,7 +25,7 @@ import cn.mrzhqiang.randall.viewmodel.LoadingViewModel;
 import com.squareup.picasso.Picasso;
 
 /**
- * 新账号：其一、添加本地；其二、快速注册
+ * 新账号：其一、添加本地；其二、快速注册。
  */
 public class AddAccountActivity extends AppCompatActivity {
 
@@ -37,9 +38,9 @@ public class AddAccountActivity extends AppCompatActivity {
   public final EditAccountViewModel editAccountVM = new EditAccountViewModel();
 
   public final LoadingViewModel loadingVM = new LoadingViewModel() {
-    @Override public void onRetry(Context context) {
-      super.onRetry(context);
-      loadHome(context);
+    @Override public void clickRetry() {
+      super.clickRetry();
+      loadHome();
     }
   };
 
@@ -47,24 +48,28 @@ public class AddAccountActivity extends AppCompatActivity {
   public final ObservableField<String> logoPath = new ObservableField<>();
   public final ObservableField<String> gameInfo = new ObservableField<>();
 
-  public final ObservableBoolean nextEnabled = new ObservableBoolean(false);
+  public final ObservableBoolean nextEnabled = new ObservableBoolean(true);
 
   public final View.OnClickListener nextAccount = new View.OnClickListener() {
     @Override public void onClick(View v) {
       final Context context = v.getContext();
+      if (homePage == null) {
+        Toast.makeText(context, "请等待主页数据加载完成", Toast.LENGTH_SHORT).show();
+        return;
+      }
 
       // 先重置错误提示
       editAccountVM.usernameError.set(null);
       editAccountVM.passwordError.set(null);
 
       final String username = editAccountVM.username.get();
-      if (username == null || !checkUsername(username)) {
+      if (username == null || !editAccountVM.checkUsername(username)) {
         editAccountVM.usernameError.set("请输入7-15位数字或字母");
         return;
       }
 
       final String password = editAccountVM.password.get();
-      if (password == null || !checkPassword(password)) {
+      if (password == null || !editAccountVM.checkPassword(password)) {
         editAccountVM.passwordError.set("请输入6-15位数字或字母");
         return;
       }
@@ -78,8 +83,6 @@ public class AddAccountActivity extends AppCompatActivity {
         @Override public void onSuccessful(Long result) {
           if (result > 0) {
             Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
-
-            // 确认是否使用默认别名
           }
         }
 
@@ -95,6 +98,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
   private HomePage homePage;
   private LoginPage loginPage;
+  private RegisterPage registerPage;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -103,6 +107,9 @@ public class AddAccountActivity extends AppCompatActivity {
     binding.setAddAccount(this);
 
     setSupportActionBar(binding.toolbar);
+
+    // 加载主页数据
+    loadHome();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -114,21 +121,21 @@ public class AddAccountActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    loadHome(this);
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    accountModel.cancel();
     randallModel.subscriptions.unsubscribe();
   }
 
-  /** 加载主页数据 */
-  public void loadHome(final Context context) {
+  public void loadHome() {
+    final Context context = this;
     randallModel.loadHome(new Result<HomePage>() {
+      @Override public void onStart() {
+        loadingVM.loading();
+      }
+
       @Override public void onSuccessful(HomePage result) {
-        if (result == null || result.emptyServer()) {
+        if (result.emptyServer()) {
           loadingVM.loadFailed();
           Toast.makeText(context, "数据异常，请重试", Toast.LENGTH_SHORT).show();
           return;
@@ -141,12 +148,28 @@ public class AddAccountActivity extends AppCompatActivity {
         gameInfo.set(homePage.gameInfo());
         editAccountVM.update(homePage.getServerList());
 
-        nextEnabled.set(true);
-
-        // 打开登录页面；TODO 注册页面应该提供一个按钮，点击按钮则加载注册页面
+        // 加载登录页面
         randallModel.loadLogin(homePage.getLogin(), new Result<LoginPage>() {
           @Override public void onSuccessful(LoginPage result) {
             loginPage = result;
+            // TODO 登录
+          }
+
+          @Override public void onFailed(String message) {
+            super.onFailed(message);
+            Toast.makeText(context, "加载登录数据失败", Toast.LENGTH_SHORT).show();
+          }
+        });
+
+        randallModel.loadRegister(homePage.getRegister(), new Result<RegisterPage>() {
+          @Override public void onSuccessful(RegisterPage result) {
+            registerPage = result;
+            // TODO 注册
+          }
+
+          @Override public void onFailed(String message) {
+            super.onFailed(message);
+            Toast.makeText(context, "加载注册数据失败", Toast.LENGTH_SHORT).show();
           }
         });
       }
@@ -157,17 +180,5 @@ public class AddAccountActivity extends AppCompatActivity {
         loadingVM.loadFailed();
       }
     });
-  }
-
-  /** 检查账户是否有效 */
-  private boolean checkUsername(String username) {
-    int length = username.length();
-    return length >= 7 && length <= 15;
-  }
-
-  /** 检查密码是否有效 */
-  private boolean checkPassword(String password) {
-    int length = password.length();
-    return length >= 6 && length <= 15;
   }
 }

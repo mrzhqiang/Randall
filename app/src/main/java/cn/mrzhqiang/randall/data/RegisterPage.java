@@ -36,7 +36,7 @@ public final class RegisterPage {
     String[] paths = href.split("\\?");
     if (paths.length > 1) {
       String query = paths[1];
-      String[] temp = query.split("=");
+      String[] temp = query.split("=", 2);
       // TODO 假若链接多出来类似 & 这样的路径，那么需要考虑分割 &
       if (temp.length > 0) {
         Map<String, String> queryMap = new HashMap<>();
@@ -76,7 +76,7 @@ public final class RegisterPage {
     path = paths.length > 0 ? paths[0] : null;
     if (paths.length > 1) {
       String query = paths[1];
-      String[] temp = query.split("=");
+      String[] temp = query.split("=", 2);
       // TODO 假若链接多出来类似 & 这样的路径，那么需要考虑分割 &
       if (temp.length > 0) {
         queryMap = new HashMap<>();
@@ -90,6 +90,7 @@ public final class RegisterPage {
       if ("text".equals(type)) {
         if (input1 == null) {
           input1 = input;
+          continue;
         }
         if (input2 == null) {
           input2 = input;

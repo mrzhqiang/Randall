@@ -36,13 +36,14 @@ public final class LoginPage {
     String[] paths = href.split("\\?");
     if (paths.length > 1) {
       String query = paths[1];
-      String[] temp = query.split("=");
-      // TODO 假若链接多出来类似 & 这样的路径，那么需要考虑分割 &
-      if (temp.length > 0) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put(temp[0], temp[1] == null ? "" : temp[1]);
-        return queryMap;
-      }
+
+      // TODO 假若多出来类似 & 这样的路径，那么需要考虑先分割 &
+      // limit为2，防止temp数组下标越界
+      String[] temp = query.split("=", 2);
+      Map<String, String> queryMap = new HashMap<>();
+      // TODO 如果=分割的字符串数组有问题，那么需要提升limit阀值
+      queryMap.put(temp[0], temp[1]);
+      return queryMap;
     }
     return null;
   }
@@ -76,11 +77,11 @@ public final class LoginPage {
     path = paths.length > 0 ? paths[0] : null;
     if (path != null && path.contains(".")) {
       // 去掉.及前面的字符串
-      path = path.substring(path.lastIndexOf("."));
+      path = path.substring(path.indexOf(".")+1);
     }
     if (paths.length > 1) {
       String query = paths[1];
-      String[] temp = query.split("=");
+      String[] temp = query.split("=", 2);
       // TODO 假若链接多出来类似 & 这样的路径，那么需要考虑分割 &
       if (temp.length > 0) {
         queryMap = new HashMap<>();
@@ -94,6 +95,7 @@ public final class LoginPage {
       if ("text".equals(type)) {
         if (input1 == null) {
           input1 = input;
+          continue;
         }
         if (input2 == null) {
           input2 = input;

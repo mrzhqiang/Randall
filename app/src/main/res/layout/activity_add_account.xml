@@ -23,7 +23,6 @@
         app:title="@string/add_account"
         >
     </android.support.v7.widget.Toolbar>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -53,6 +52,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables"
             >
           <ImageView
               android:layout_width="120dp"
@@ -60,6 +60,7 @@
               android:layout_gravity="center"
               android:contentDescription="@string/game_logo"
               app:gameLogo="@{addAccount.logoPath}"
+              tools:src="@drawable/ic_empty_default"
               />
           <TextView
               android:layout_width="wrap_content"
