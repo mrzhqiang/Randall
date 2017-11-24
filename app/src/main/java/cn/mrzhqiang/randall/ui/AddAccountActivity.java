@@ -80,6 +80,11 @@ public class AddAccountActivity extends AppCompatActivity {
       // 如果账号注册失败，则显示相关提示，不再有其他逻辑
       // 如果注册成功，提示是否登录：是则继续登录；否则关闭对话框
       accountModel.addAccount(username, password, new Result<Long>() {
+        @Override public void onStart() {
+          next.set("请稍等..");
+          nextEnabled.set(false);
+        }
+
         @Override public void onSuccessful(Long result) {
           if (result > 0) {
             Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
@@ -88,6 +93,8 @@ public class AddAccountActivity extends AppCompatActivity {
 
         @Override public void onFailed(String message) {
           Toast.makeText(context, "添加失败：" + message, Toast.LENGTH_SHORT).show();
+          next.set("下一步");
+          nextEnabled.set(true);
         }
       });
     }
