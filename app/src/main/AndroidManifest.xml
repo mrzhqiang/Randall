@@ -31,10 +31,7 @@
 
     <activity
         android:name=".ui.AddAccountActivity"
-        android:label="@string/add_account"
         android:launchMode="singleTask"/>
-
-    <activity android:name=".ui.OtherGameActivity"/>
 
   </application>
 </manifest>

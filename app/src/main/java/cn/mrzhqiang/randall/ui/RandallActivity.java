@@ -35,21 +35,6 @@ public class RandallActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
   }
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.randall, menu);
-    return true;
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_add_uid:
-        Intent intent = new Intent(this, AddAccountActivity.class);
-        startActivity(intent);
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override protected void onResume() {
     super.onResume();
     // 对账户进行监听

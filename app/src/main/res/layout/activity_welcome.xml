@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
   <data>
     <variable
         name="welcome"
         type="cn.mrzhqiang.randall.ui.WelcomeActivity"
         />
   </data>
-  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:fillViewport="true"
+      android:orientation="vertical"
       >
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        app:title="@string/welcome_title"
         >
-      <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:title="@string/app_name"
-          >
-      </android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -37,9 +39,9 @@
             android:layout_weight="1"
             />
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
             android:contentDescription="@string/application_logo"
             android:src="@drawable/ic_launcher_web"
             />
@@ -49,7 +51,7 @@
             android:layout_weight="1"
             />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/welcome_header"
             android:textColor="@android:color/black"
@@ -57,10 +59,9 @@
             android:textStyle="bold"
             />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:autoLink="web"
             android:text="@string/welcome_text"
             />
         <Button
@@ -68,17 +69,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            android:onClick="@{welcome.addAccount}"
-            android:text="@string/add_account"
+            android:enabled="@{welcome.openEnable}"
+            android:onClick="@{welcome.clickOpen}"
+            android:text="@{welcome.openText}"
             style="@style/Widget.AppCompat.Button.Colored"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:onClick="@{welcome.otherGame}"
-            android:text="@string/other_game"
-            style="@style/Widget.AppCompat.Button.Colored"
+            tools:enabled="false"
+            tools:text="正在跳转"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -90,6 +86,6 @@
             android:textSize="12sp"
             />
       </LinearLayout>
-    </LinearLayout>
-  </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+  </LinearLayout>
 </layout>
