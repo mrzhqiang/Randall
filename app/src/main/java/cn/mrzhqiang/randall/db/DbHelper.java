@@ -18,21 +18,17 @@ final class DbHelper extends SQLiteOpenHelper {
   private static final String DB_NAME = "randall.db";
   private static final int VERSION = 1;
 
-  /** 账户表创建语句 */
-  private static final String CREATE_ACCOUNT = "CREATE TABLE "
-      + RandallAccount.NAME
+  private static final String CREATE_ACCOUNT = ""
+      + "CREATE TABLE "
+      + Account.TABLE
       + " ("
-      + RandallAccount.COL_ID
-      + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + RandallAccount.COL_USERNAME
-      + " varchar(15) UNIQUE NOT NULL, "
-      + RandallAccount.COL_PASSWORD
-      + " varchar(15) NOT NULL, "
-      + RandallAccount.COL_STATUS
-      + " INTEGER DEFAULT 0, "
-      + RandallAccount.COL_UPDATED
-      + " INTEGER NOT NULL"
-      + ");";
+      + Account.USERNAME
+      + " TEXT NOT NULL,"
+      + Account.PASSWORD
+      + " TEXT NOT NULL,"
+      + Account.STATUS
+      + " INTEGER NOT NULL DEFAULT 0"
+      + ")";
 
   public DbHelper(@NonNull Context context) {
     super(context, DB_NAME, null /* factory */, VERSION);

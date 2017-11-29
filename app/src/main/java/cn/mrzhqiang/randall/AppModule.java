@@ -11,10 +11,10 @@ import dagger.Provides;
 
 @Module(includes = {
     DbModule.class, NetModule.class,
-}) public final class AppModule {
+}) final class AppModule {
   private final Application application;
 
-  public AppModule(Application application) {
+  AppModule(Application application) {
     this.application = application;
   }
 
