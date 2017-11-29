@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 import cn.mrzhqiang.randall.R;
-import cn.mrzhqiang.randall.data.Account;
 import cn.mrzhqiang.randall.databinding.ActivityRandallBinding;
-import cn.mrzhqiang.randall.model.AccountModel;
+import cn.mrzhqiang.randall.db.RandallAccount;
+import cn.mrzhqiang.randall.ui.model.AccountModel;
 import cn.mrzhqiang.randall.net.Result;
 import java.util.List;
 
@@ -22,7 +20,7 @@ import java.util.List;
  */
 public class RandallActivity extends AppCompatActivity {
 
-  public final ObservableArrayList<Account> accountList = new ObservableArrayList<>();
+  public final ObservableArrayList<RandallAccount> accountList = new ObservableArrayList<>();
 
   private final AccountModel accountModel = new AccountModel();
 
@@ -38,8 +36,8 @@ public class RandallActivity extends AppCompatActivity {
   @Override protected void onResume() {
     super.onResume();
     // 对账户进行监听
-    accountModel.queryList(new Result<List<Account>>() {
-      @Override public void onSuccessful(List<Account> result) {
+    accountModel.queryList(new Result<List<RandallAccount>>() {
+      @Override public void onSuccessful(List<RandallAccount> result) {
         if (isFinishing()) {
           return;
         }
@@ -56,7 +54,7 @@ public class RandallActivity extends AppCompatActivity {
 
         // 这里是测试方法
         StringBuilder builder = new StringBuilder();
-        for (Account account : result) {
+        for (RandallAccount account : result) {
           builder.append(account.toString());
         }
         new AlertDialog.Builder(RandallActivity.this).setMessage(builder.toString()).show();

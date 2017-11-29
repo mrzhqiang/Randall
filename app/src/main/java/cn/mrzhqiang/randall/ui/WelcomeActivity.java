@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,13 +14,22 @@ import cn.mrzhqiang.randall.R;
 import cn.mrzhqiang.randall.databinding.ActivityWelcomeBinding;
 
 /**
- * 欢迎页面，提供简单的注册/登录模块
+ * 欢迎页面，提供简单的主页加载，然后提供跳转到注册/登录页面的链接
+ *
  * @author mrZQ
  */
 public class WelcomeActivity extends AppCompatActivity {
 
   public final ObservableField<String> openText = new ObservableField<>("正在加载");
   public final ObservableBoolean openEnable = new ObservableBoolean(false);
+  public final ObservableBoolean showRefresh = new ObservableBoolean(false);
+
+  public final SwipeRefreshLayout.OnRefreshListener refreshEvent =
+      new SwipeRefreshLayout.OnRefreshListener() {
+        @Override public void onRefresh() {
+          loadHome();
+        }
+      };
 
   public final View.OnClickListener clickOpen = new View.OnClickListener() {
     @Override public void onClick(View v) {
@@ -37,15 +45,15 @@ public class WelcomeActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     ActivityWelcomeBinding binding =
         DataBindingUtil.setContentView(this, R.layout.activity_welcome);
-    binding.setWelcome(this);
+    binding.setActivity(this);
 
     setSupportActionBar(binding.toolbar);
 
-    binding.refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
-        // TODO 重新加载数据
-      }
-    });
+    showRefresh.set(true);
+    loadHome();
   }
 
+  private void loadHome() {
+
+  }
 }

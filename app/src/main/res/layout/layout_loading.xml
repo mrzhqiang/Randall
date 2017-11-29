@@ -5,7 +5,7 @@
   <data>
     <variable
         name="loading"
-        type="cn.mrzhqiang.randall.viewmodel.LoadingViewModel"
+        type="cn.mrzhqiang.randall.ui.viewmodel.LoadingViewModel"
         />
   </data>
   <FrameLayout

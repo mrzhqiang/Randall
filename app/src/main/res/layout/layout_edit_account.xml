@@ -6,7 +6,7 @@
   <data>
     <variable
         name="editAccount"
-        type="cn.mrzhqiang.randall.viewmodel.EditAccountViewModel"
+        type="cn.mrzhqiang.randall.ui.viewmodel.EditAccountViewModel"
         />
   </data>
   <LinearLayout

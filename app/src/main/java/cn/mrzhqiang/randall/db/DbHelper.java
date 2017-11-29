@@ -6,12 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import cn.mrzhqiang.logger.Log;
-import cn.mrzhqiang.randall.data.Account;
 
 /**
- * 数据库辅助工具
+ * 数据库辅助
+ *
+ * @author mrZQ
  */
-public final class DbHelper extends SQLiteOpenHelper {
+final class DbHelper extends SQLiteOpenHelper {
   private static final String TAG = "DbHelper";
 
   private static final String DB_NAME = "randall.db";
@@ -19,17 +20,17 @@ public final class DbHelper extends SQLiteOpenHelper {
 
   /** 账户表创建语句 */
   private static final String CREATE_ACCOUNT = "CREATE TABLE "
-      + Account.NAME
+      + RandallAccount.NAME
       + " ("
-      + Account.COL_ID
+      + RandallAccount.COL_ID
       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + Account.COL_USERNAME
+      + RandallAccount.COL_USERNAME
       + " varchar(15) UNIQUE NOT NULL, "
-      + Account.COL_PASSWORD
+      + RandallAccount.COL_PASSWORD
       + " varchar(15) NOT NULL, "
-      + Account.COL_STATUS
+      + RandallAccount.COL_STATUS
       + " INTEGER DEFAULT 0, "
-      + Account.COL_UPDATED
+      + RandallAccount.COL_UPDATED
       + " INTEGER NOT NULL"
       + ");";
 

@@ -13,15 +13,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cn.mrzhqiang.randall.R;
-import cn.mrzhqiang.randall.data.HomePage;
-import cn.mrzhqiang.randall.data.LoginPage;
-import cn.mrzhqiang.randall.data.RegisterPage;
 import cn.mrzhqiang.randall.databinding.ActivityAddAccountBinding;
-import cn.mrzhqiang.randall.model.AccountModel;
-import cn.mrzhqiang.randall.model.RandallModel;
+import cn.mrzhqiang.randall.ui.model.AccountModel;
+import cn.mrzhqiang.randall.ui.model.RandallModel;
 import cn.mrzhqiang.randall.net.Result;
-import cn.mrzhqiang.randall.viewmodel.EditAccountViewModel;
-import cn.mrzhqiang.randall.viewmodel.LoadingViewModel;
+import cn.mrzhqiang.randall.ui.viewmodel.EditAccountViewModel;
+import cn.mrzhqiang.randall.ui.viewmodel.LoadingViewModel;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -53,10 +50,6 @@ public class AddAccountActivity extends AppCompatActivity {
   public final View.OnClickListener nextAccount = new View.OnClickListener() {
     @Override public void onClick(View v) {
       final Context context = v.getContext();
-      if (homePage == null) {
-        Toast.makeText(context, "请等待主页数据加载完成", Toast.LENGTH_SHORT).show();
-        return;
-      }
 
       // 先重置错误提示
       editAccountVM.usernameError.set(null);
@@ -103,10 +96,6 @@ public class AddAccountActivity extends AppCompatActivity {
   private final AccountModel accountModel = new AccountModel();
   private final RandallModel randallModel = new RandallModel();
 
-  private HomePage homePage;
-  private LoginPage loginPage;
-  private RegisterPage registerPage;
-
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ActivityAddAccountBinding binding =
@@ -136,56 +125,6 @@ public class AddAccountActivity extends AppCompatActivity {
 
   public void loadHome() {
     final Context context = this;
-    randallModel.loadHome(new Result<HomePage>() {
-      @Override public void onStart() {
-        loadingVM.loading();
-      }
 
-      @Override public void onSuccessful(HomePage result) {
-        if (result.emptyServer()) {
-          loadingVM.loadFailed();
-          Toast.makeText(context, "数据异常，请重试", Toast.LENGTH_SHORT).show();
-          return;
-        }
-
-        loadingVM.loadSuccessful();
-
-        homePage = result;
-        logoPath.set(homePage.logoPath());
-        gameInfo.set(homePage.gameInfo());
-        editAccountVM.update(homePage.getServerList());
-
-        // 加载登录页面
-        randallModel.loadLogin(homePage.getLogin(), new Result<LoginPage>() {
-          @Override public void onSuccessful(LoginPage result) {
-            loginPage = result;
-            // TODO 登录
-          }
-
-          @Override public void onFailed(String message) {
-            super.onFailed(message);
-            Toast.makeText(context, "加载登录数据失败", Toast.LENGTH_SHORT).show();
-          }
-        });
-
-        randallModel.loadRegister(homePage.getRegister(), new Result<RegisterPage>() {
-          @Override public void onSuccessful(RegisterPage result) {
-            registerPage = result;
-            // TODO 注册
-          }
-
-          @Override public void onFailed(String message) {
-            super.onFailed(message);
-            Toast.makeText(context, "加载注册数据失败", Toast.LENGTH_SHORT).show();
-          }
-        });
-      }
-
-      @Override public void onFailed(String message) {
-        super.onFailed(message);
-        Toast.makeText(context, "加载失败：" + message, Toast.LENGTH_SHORT).show();
-        loadingVM.loadFailed();
-      }
-    });
   }
 }
