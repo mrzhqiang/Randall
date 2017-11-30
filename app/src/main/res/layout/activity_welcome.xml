@@ -6,7 +6,7 @@
   <data>
     <variable
         name="activity"
-        type="cn.mrzhqiang.randall.ui.WelcomeActivity"
+        type="com.github.mrzhqiang.randall.ui.WelcomeActivity"
         />
   </data>
   <LinearLayout

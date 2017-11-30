@@ -32,23 +32,6 @@ dependencies {
 
   implementation project(':smith')
 
-  // 依赖注入框架
-  implementation 'com.google.dagger:dagger:2.10'
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
-  // 数据库框架
-  implementation 'com.squareup.sqlbrite:sqlbrite:1.1.1'
-  // 网络框架
-  implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-  implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
-  implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
-  // 网络请求日志
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-  // 图片加载框架
-  implementation 'com.squareup.picasso:picasso:2.5.2'
-  implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-  // 一个对于构成使用的Java虚拟机观察序列异步和基于事件的程序库
-  implementation 'io.reactivex:rxandroid:1.2.1'
-  implementation 'io.reactivex:rxjava:1.3.0'
   // 简化权限请求
   implementation 'pub.devrel:easypermissions:0.3.1'
   // 聊天气泡
@@ -59,13 +42,6 @@ dependencies {
   implementation 'com.robinhood.ticker:ticker:1.1.1'
   // 飞天图片或文字
   implementation 'com.wx.goodview:goodview:1.0.0'
-  // 简单的调试日志工具
-  implementation 'com.github.mrzhqiang:debug-log:1.1'
-  // 常用的开发辅助工具
-  implementation 'com.github.mrzhqiang:helper:1.2.1'
-
-  annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
-  annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
 
   // 官方框架
   implementation 'com.android.support:design:26.1.0'

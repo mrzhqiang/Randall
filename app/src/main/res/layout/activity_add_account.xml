@@ -7,7 +7,7 @@
   <data>
     <variable
         name="addAccount"
-        type="cn.mrzhqiang.randall.ui.AddAccountActivity"
+        type="com.github.mrzhqiang.randall.ui.AddAccountActivity"
         />
   </data>
   <LinearLayout
@@ -36,7 +36,7 @@
           app:cardUseCompatPadding="true"
           >
         <include
-            layout="@layout/layout_edit_account"
+            layout="@layout/view_edit_account"
             app:editAccount="@{addAccount.editAccountVM}"
             />
       </android.support.v7.widget.CardView>
@@ -71,7 +71,7 @@
               />
         </LinearLayout>
         <include
-            layout="@layout/layout_loading"
+            layout="@layout/view_loading"
             app:loading="@{addAccount.loadingVM}"
             />
       </FrameLayout>

@@ -3,7 +3,7 @@
   <data>
     <variable
         name="viewModel"
-        type="cn.mrzhqiang.randall.ui.ChooseUidActivity"
+        type="com.github.mrzhqiang.randall.ui.ChooseUidActivity"
         />
   </data>
 
