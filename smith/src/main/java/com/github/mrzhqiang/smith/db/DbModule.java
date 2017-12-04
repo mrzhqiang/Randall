@@ -23,11 +23,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Provides @Singleton SqlBrite provideSqlBrite() {
-    return new SqlBrite.Builder().logger(new SqlBrite.Logger() {
-      @Override public void log(String message) {
-        Log.d("Database", message);
-      }
-    }).build();
+    return new SqlBrite.Builder().logger(message -> Log.d("Database", message)).build();
   }
 
   @Provides @Singleton BriteDatabase provideDatabase(SqlBrite sqlBrite, SQLiteOpenHelper helper,

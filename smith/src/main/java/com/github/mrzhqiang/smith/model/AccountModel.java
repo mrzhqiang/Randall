@@ -4,9 +4,9 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-import cn.mrzhqiang.helper.AccountHelper;
 import com.github.mrzhqiang.smith.BaseApp;
 import com.github.mrzhqiang.smith.db.Account;
+import com.github.mrzhqiang.smith.db.DbException;
 import com.github.mrzhqiang.smith.net.Result;
 import com.squareup.sqlbrite.BriteDatabase;
 import java.util.List;
@@ -35,32 +35,36 @@ public final class AccountModel {
     BaseApp.appComponent().inject(this);
   }
 
-  public void addAccount(Account account, @NonNull Result<Boolean> result) {
-    subscription.add(
-        Observable.just(account).subscribeOn(Schedulers.io()).map(new Func1<Account, Boolean>() {
-          @Override public Boolean call(Account account) {
-            Account.Builder builder = new Account.Builder(account);
-            return db.insert(Account.TABLE, builder.build()) > 0;
+  public void addAccount(String username, String password, @NonNull Result<Account> result) {
+    Account account = Account.create(username, password, Account.Status.DEFAULT);
+    subscription.add(Observable.just(account)
+        // 在IO线程上执行
+        .subscribeOn(Schedulers.io())
+        // 优先添加到本地数据库
+        .doOnNext(account1 -> {
+          long id = db.insert(Account.TABLE, new Account.Builder(account1).build());
+          // 只有成功的插入才会通知其他订阅者所以这里抛出异常即可
+          if (id == -1) {
+            throw new DbException("新建账号失败");
           }
+        }).flatMap((Func1<Account, Observable<Account>>) account12 -> {
+          // TODO 基于给定的Account实例，去验证这个账户，如果不存在，直接注册；如果存在，再看结果
+          return null;
         }).subscribe(result));
   }
 
   public void deleteAccount(Account account, @NonNull Result<Boolean> result) {
-    subscription.add(Observable.just(account).map(new Func1<Account, Boolean>() {
-      @Override public Boolean call(Account account) {
-        return db.delete(Account.TABLE, Account.USERNAME + "=?", account.username()) > 0;
-      }
-    }).subscribe(result));
+    subscription.add(Observable.just(account)
+        .map(account1 -> db.delete(Account.TABLE, Account.USERNAME + "=?", account1.username()) > 0)
+        .subscribe(result));
   }
 
   public void updateAccount(Account account, @NonNull Result<Boolean> result) {
-    subscription.add(Observable.just(account).map(new Func1<Account, Boolean>() {
-      @Override public Boolean call(Account account) {
-        Account.Builder builder =
-            new Account.Builder().password(account.password()).status(account.status());
-        return db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?",
-            account.username()) > 0;
-      }
+    subscription.add(Observable.just(account).map(account1 -> {
+      Account.Builder builder =
+          new Account.Builder().password(account1.password()).status(account1.status());
+      return db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?", account1.username())
+          > 0;
     }).subscribe(result));
   }
 
@@ -86,9 +90,5 @@ public final class AccountModel {
       Log.w(TAG, "Ignore a checkExists exception");
     }
     return false;
-  }
-
-  public String generatePassword(int length) {
-    return AccountHelper.createPassword(length);
   }
 }

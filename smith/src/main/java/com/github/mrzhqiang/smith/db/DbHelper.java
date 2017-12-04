@@ -29,7 +29,7 @@ final class DbHelper extends SQLiteOpenHelper {
       + " INTEGER NOT NULL DEFAULT 0"
       + ")";
 
-  public DbHelper(@NonNull Context context) {
+  DbHelper(@NonNull Context context) {
     super(context, DB_NAME, null /* factory */, VERSION);
   }
 

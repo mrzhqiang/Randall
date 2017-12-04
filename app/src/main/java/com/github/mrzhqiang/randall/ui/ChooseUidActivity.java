@@ -16,11 +16,8 @@ import com.github.mrzhqiang.randall.databinding.ActivityChooseUidBinding;
 public class ChooseUidActivity extends AppCompatActivity {
   private static final String TAG = "ChooseUidActivity";
 
-  public final View.OnClickListener addUid = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      Toast.makeText(v.getContext(), "跳转添加账号页面", Toast.LENGTH_SHORT).show();
-    }
-  };
+  public final View.OnClickListener addUid =
+      v -> Toast.makeText(v.getContext(), "跳转添加账号页面", Toast.LENGTH_SHORT).show();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

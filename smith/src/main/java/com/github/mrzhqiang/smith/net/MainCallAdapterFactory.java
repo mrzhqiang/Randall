@@ -40,6 +40,7 @@ final class MainCallAdapterFactory extends CallAdapter.Factory {
         // Delegate to get the normal Observable...
         Observable<?> o = delegate.adapt(call);
         // 这里省略了Model调用Randall接口时，在IO线程上取消请求，以及观察在主线程上的写法
+        // FIXME 这里是错误的，有待改正
         return o.unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
       }
 

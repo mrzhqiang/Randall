@@ -57,12 +57,9 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
     return new Picasso.Builder(application).downloader(downloader)
         .loggingEnabled(debug)
         .indicatorsEnabled(debug)
-        .listener(new Picasso.Listener() {
-          @Override public void onImageLoadFailed(Picasso picasso1, Uri uri, Exception exception) {
-            Log.d("Picasso", String.format(Locale.getDefault(), "Load Image: %s, failed: %s.", uri,
-                exception.getMessage()));
-          }
-        })
+        .listener((picasso1, uri, exception) -> Log.d("Picasso",
+            String.format(Locale.getDefault(), "Load Image: %s, failed: %s.", uri,
+                exception.getMessage())))
         .build();
   }
 
@@ -71,18 +68,15 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
     private static final int CACHE_MAX_SIZE = 50 * 1024 * 1024;
 
     @Provides @Singleton Authenticator provideAuthenticator() {
-      return new Authenticator() {
-        @Override public Request authenticate(@NonNull Route route, @NonNull Response response)
-            throws IOException {
-          String auth = response.request().header("Authorization");
-          if (auth == null) {
-            // FIXME 模拟一个权限，留待未来完善
-            String credential = Credentials.basic("ApiKey", "null");
-            return response.request().newBuilder().header("Authorization", credential).build();
-          }
-          // Token过期且刷新失败
-          return null;
+      return (route, response) -> {
+        String auth = response.request().header("Authorization");
+        if (auth == null) {
+          // FIXME 模拟一个权限，留待未来完善
+          String credential = Credentials.basic("ApiKey", "null");
+          return response.request().newBuilder().header("Authorization", credential).build();
         }
+        // Token过期且刷新失败
+        return null;
       };
     }
 
@@ -101,11 +95,7 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
     @Provides @Singleton HttpLoggingInterceptor provideHttpLoggingInterceptor() {
       HttpLoggingInterceptor logger =
-          new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override public void log(@NonNull String message) {
-              Log.d("Network", message);
-            }
-          });
+          new HttpLoggingInterceptor(message -> Log.d("Network", message));
       logger.setLevel(BODY);
       return logger;
     }

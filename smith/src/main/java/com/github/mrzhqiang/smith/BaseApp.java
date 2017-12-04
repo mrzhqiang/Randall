@@ -2,6 +2,7 @@ package com.github.mrzhqiang.smith;
 
 import android.app.Application;
 import cn.mrzhqiang.logger.Log;
+import com.squareup.picasso.Picasso;
 
 /**
  * 应用，初始化日志和依赖注入的地方

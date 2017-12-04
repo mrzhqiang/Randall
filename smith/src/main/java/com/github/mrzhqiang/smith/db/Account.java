@@ -31,13 +31,11 @@ import rx.functions.Func1;
 
   public static final String QUERY_LIST = "SELECT * FROM " + TABLE;
 
-  public static final Func1<Cursor, Account> MAPPER = new Func1<Cursor, Account>() {
-    @Override public Account call(Cursor cursor) {
-      String username = Db.decode(Db.getString(cursor, USERNAME));
-      String password = Db.decode(Db.getString(cursor, PASSWORD));
-      Account.Status status = Status.values()[Db.getInt(cursor, STATUS)];
-      return create(username, password, status);
-    }
+  public static final Func1<Cursor, Account> MAPPER = cursor -> {
+    String username = Db.decode(Db.getString(cursor, USERNAME));
+    String password = Db.decode(Db.getString(cursor, PASSWORD));
+    Status status = Status.values()[Db.getInt(cursor, STATUS)];
+    return create(username, password, status);
   };
 
   public static final class Builder {

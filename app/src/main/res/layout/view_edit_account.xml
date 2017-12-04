@@ -41,6 +41,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:digits="@string/char_number"
+          android:enabled="@{editAccount.passwordEnabled}"
           android:hint="@string/password_hint"
           android:inputType="text"
           android:text="@={editAccount.password}"
@@ -50,31 +51,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="4dp"
+        android:padding="8dp"
         >
-      <TextView
+      <CheckBox
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/choose_hint"
+          android:checked="@={editAccount.randomChecked}"
+          android:text="@string/random_password"
+          android:textColor="@color/colorAccent"
+          app:buttonTint="@color/colorAccent"
+          tools:checked="false"
+          />
+      <Space
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
           />
       <Button
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:onClick="@{editAccount.chooseServer}"
-          android:text="@{editAccount.serverName}"
-          tools:text="[永恒]"
-          style="@style/Widget.AppCompat.Button.Borderless.Colored"
+          android:drawableStart="@drawable/ic_update"
+          android:onClick="@{editAccount.clickRandom}"
+          android:text="@string/next_random"
+          android:visibility="@{editAccount.randomVisibility}"
+          tools:visibility="gone"
+          style="@style/Widget.AppCompat.Button.Colored"
           />
     </LinearLayout>
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onCheckedChanged="@{editAccount.registerChanged}"
-        android:text="@string/register_new_account"
-        android:checked="false"
-        android:textColor="@color/colorAccent"
-        app:buttonTint="@color/colorAccent"
-        />
   </LinearLayout>
 </layout>

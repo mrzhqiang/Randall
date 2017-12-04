@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.randall.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
 
 /**
  * 兰达尔主页，展示当前游戏内容
+ *
+ * @author mrZQ
  */
 public class RandallActivity extends AppCompatActivity {
 
@@ -35,6 +38,8 @@ public class RandallActivity extends AppCompatActivity {
 
   @Override protected void onResume() {
     super.onResume();
+
+    final Context context = this;
     // 对账户进行监听
     accountModel.queryList(new Result<List<Account>>() {
       @Override public void onSuccessful(List<Account> result) {
@@ -42,7 +47,7 @@ public class RandallActivity extends AppCompatActivity {
           return;
         }
         if (result.size() == 0) {
-          Intent intent = new Intent(RandallActivity.this, WelcomeActivity.class);
+          Intent intent = new Intent(context, WelcomeActivity.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
           finish();

@@ -9,7 +9,7 @@
   <string name="welcome_title">欢迎</string>
   <string name="application_logo">应用图标</string>
   <string name="welcome_header">关于地狱之门</string>
-  <string name="welcome_text">一款网页文字游戏，主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n周周活动：攻城、抽奖、许愿、魔军。\n欢迎加入地狱之门。</string>
+  <string name="welcome_text">一款网页文字游戏，主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n周周活动：攻城、抽奖、许愿、魔军。\n欢迎加入。</string>
   <string name="welcome_developer">兰达尔由 mrzhqiang 开发</string>
 
   <!--EditAccount-->
@@ -29,6 +29,10 @@
   <!--Empty-->
   <string name="empty_icon">空数据图标</string>
   <string name="empty_hint">抱歉，没有任何数据</string>
+  <string name="add_account">添加账号</string>
+  <string name="add">添加</string>
+  <string name="random_password">随机密码</string>
+  <string name="next_random">换一个</string>
 
 
 </resources>
