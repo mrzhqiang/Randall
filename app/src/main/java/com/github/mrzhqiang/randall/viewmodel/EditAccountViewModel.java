@@ -24,9 +24,16 @@ public final class EditAccountViewModel {
   public final ObservableField<String> passwordError = new ObservableField<>();
   public final ObservableField<String> password = new ObservableField<>();
 
+  public final ObservableField<String> startIndex = new ObservableField<>("起始编号");
+  public final ObservableField<String> createCount = new ObservableField<>("创建数量");
+
+  public final ObservableBoolean usernameEnabled = new ObservableBoolean(true);
   public final ObservableBoolean passwordEnabled = new ObservableBoolean(true);
 
+  public final ObservableBoolean batchChecked = new ObservableBoolean(false);
   public final ObservableBoolean randomChecked = new ObservableBoolean(false);
+  public final ObservableInt createVisibility = new ObservableInt(View.GONE);
+  public final ObservableInt startVisibility = new ObservableInt(View.GONE);
   public final ObservableInt randomVisibility = new ObservableInt(View.GONE);
 
   public final View.OnClickListener clickRandom = v -> autoPassword();
@@ -48,6 +55,16 @@ public final class EditAccountViewModel {
         if (checkPassword(value)) {
           passwordError.set(null);
         }
+      }
+    });
+    batchChecked.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+      @Override public void onPropertyChanged(Observable sender, int propertyId) {
+        boolean value = batchChecked.get();
+        usernameEnabled.set(!value);
+        startVisibility.set(value ? View.VISIBLE : View.GONE);
+        createVisibility.set(value ? View.VISIBLE : View.GONE);
+        startIndex.set("0");
+        createCount.set("2");
       }
     });
     randomChecked.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {

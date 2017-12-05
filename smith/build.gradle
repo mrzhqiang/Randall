@@ -62,7 +62,7 @@ dependencies {
   // 简单的调试日志工具
   compile 'com.github.mrzhqiang:debug-log:1.1'
   // 常用的开发辅助工具
-  compile 'com.github.mrzhqiang:helper:1.2.1'
+  compile 'com.github.mrzhqiang:helper:1.2.2'
 
   // 网页内容解析器/装饰器
   compile 'org.jsoup:jsoup:1.11.2'

@@ -17,7 +17,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/welcome_title"
+        app:title="@string/welcome_label"
         >
     </android.support.v7.widget.Toolbar>
     <LinearLayout
@@ -63,6 +63,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="end"
           android:layout_marginTop="10dp"
+          android:layout_margin="4dp"
           android:onClick="@{activity.clickAdd}"
           android:text="@string/add_account"
           style="@style/Widget.AppCompat.Button.Colored"

@@ -5,34 +5,24 @@
   <item name="visible" type="id"/>
   <item name="masked" type="id"/>
 
-  <!--Welcome-->
-  <string name="welcome_title">欢迎</string>
+  <string name="welcome_label">欢迎使用兰达尔</string>
   <string name="application_logo">应用图标</string>
   <string name="welcome_header">关于地狱之门</string>
-  <string name="welcome_text">一款网页文字游戏，主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n周周活动：攻城、抽奖、许愿、魔军。\n欢迎加入。</string>
-  <string name="welcome_developer">兰达尔由 mrzhqiang 开发</string>
-
-  <!--EditAccount-->
-  <string name="char_number">1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
-  <string name="username_hint">用户名/uid</string>
-  <string name="password_hint">密码(6–15位数字或字母)</string>
-  <string name="choose_hint">当前服务器：</string>
-  <string name="register_new_account">在服务器上注册新账户</string>
-
-  <!--Loading-->
-  <string name="load_failed_retry">加载失败,点击重试</string>
-
-  <!--AddAccount-->
-  <string name="game_logo">游戏图标</string>
-  <string name="next">下一步</string>
-
-  <!--Empty-->
-  <string name="empty_icon">空数据图标</string>
-  <string name="empty_hint">抱歉，没有任何数据</string>
+  <string name="welcome_text">一款网页文字游戏，主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n精彩活动：攻城、抽奖、许愿、魔军。\n欢迎加入地狱大家庭。</string>
   <string name="add_account">添加账号</string>
-  <string name="add">添加</string>
+  <string name="welcome_developer">兰达尔由 mrzhqiang 开发</string>
+  <string name="char_number">1234567890qwertyuiopasdfghjklzxcvbnm</string>
+  <string name="username_hint">用户名/uid</string>
+  <string name="password_hint">密码</string>
   <string name="random_password">随机密码</string>
   <string name="next_random">换一个</string>
-
+  <string name="login_label">登陆</string>
+  <string name="login">登陆</string>
+  <string name="empty_icon">空的图标</string>
+  <string name="load_failed_retry">加载失败，点击重试</string>
+  <string name="register">注册</string>
+  <string name="batch_username">批量账号</string>
+  <string name="start_index">起始编号</string>
+  <string name="create_count">创建数量</string>
 
 </resources>

@@ -5,8 +5,8 @@
     >
   <data>
     <variable
-        name="activity"
-        type="com.github.mrzhqiang.randall.ui.AddAccountActivity"
+        name="login"
+        type="com.github.mrzhqiang.randall.ui.LoginActivity"
         />
   </data>
   <LinearLayout
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:title="@string/add_account"
+        app:title="@string/login"
         >
     </android.support.v7.widget.Toolbar>
     <LinearLayout
@@ -42,21 +42,39 @@
           >
         <include
             layout="@layout/view_edit_account"
-            app:editAccount="@{activity.editAccountVM}"
+            app:editAccount="@{login.editAccountVM}"
             />
       </android.support.v7.widget.CardView>
-      <Space
+      <FrameLayout
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
-          />
-      <Button
+          >
+        <!--todo loading and retry-->
+      </FrameLayout>
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:onClick="@{activity.clickAddAccount}"
-          android:text="@string/add"
-          style="@style/Widget.AppCompat.Button.Colored"
-          />
+          android:orientation="horizontal"
+          android:padding="4dp"
+          >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="@{login.clickRegister}"
+            android:text="@string/register"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="@{login.clickLogin}"
+            android:text="@string/login"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
+      </LinearLayout>
     </LinearLayout>
   </LinearLayout>
 </layout>

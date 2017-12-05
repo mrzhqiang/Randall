@@ -7,27 +7,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import com.github.mrzhqiang.randall.R;
-import com.github.mrzhqiang.randall.databinding.ActivityAddAccountBinding;
+import com.github.mrzhqiang.randall.databinding.ActivityLoginBinding;
 import com.github.mrzhqiang.randall.viewmodel.EditAccountViewModel;
 
 /**
- * 添加账号页面，先添加到本地，然后去进行网络验证：
- * 如果不存在，告知并提示是否注册；如果存在，则跳转到主页
+ * 登陆页面
  *
  * @author mrZQ
  */
 
-public class AddAccountActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
   public final EditAccountViewModel editAccountVM = new EditAccountViewModel();
 
   public final View.OnClickListener clickAddAccount = v -> editAccountVM.addAccount(v.getContext());
 
+  public final View.OnClickListener clickRegister = v -> {};
+
+  public final View.OnClickListener clickLogin = v -> {};
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ActivityAddAccountBinding binding =
-        DataBindingUtil.setContentView(this, R.layout.activity_add_account);
-    binding.setActivity(this);
+    ActivityLoginBinding binding =
+        DataBindingUtil.setContentView(this, R.layout.activity_login);
+    binding.setLogin(this);
 
     setSupportActionBar(binding.toolbar);
   }

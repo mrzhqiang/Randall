@@ -23,13 +23,14 @@
 
     <activity
         android:name=".ui.WelcomeActivity"
-        android:label="@string/welcome_title"
-        android:launchMode="singleTask"
+        android:label="@string/welcome_label"
+        android:noHistory="true"
         android:screenOrientation="portrait"/>
 
     <activity
-        android:name=".ui.AddAccountActivity"
-        android:launchMode="singleTask"/>
+        android:name=".ui.LoginActivity"
+        android:label="@string/login_label"
+        android:noHistory="true"/>
 
   </application>
 </manifest>

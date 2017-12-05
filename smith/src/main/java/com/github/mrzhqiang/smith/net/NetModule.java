@@ -41,7 +41,6 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
       @Named("baseUrl") String baseUrl) {
     return new Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(SmithConverterFactory.create(baseUrl))
-        .addCallAdapterFactory(MainCallAdapterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
         .client(client)
         .build();

@@ -17,7 +17,7 @@ import com.github.mrzhqiang.smith.net.Result;
 import java.util.List;
 
 /**
- * 兰达尔主页，展示当前游戏内容
+ * 兰达尔主页
  *
  * @author mrZQ
  */
@@ -43,14 +43,10 @@ public class RandallActivity extends AppCompatActivity {
     // 对账户进行监听
     accountModel.queryList(new Result<List<Account>>() {
       @Override public void onSuccessful(List<Account> result) {
-        if (isFinishing()) {
-          return;
-        }
         if (result.size() == 0) {
           Intent intent = new Intent(context, WelcomeActivity.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
-          finish();
           return;
         }
 
