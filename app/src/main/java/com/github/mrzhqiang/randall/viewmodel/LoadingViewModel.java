@@ -12,6 +12,8 @@ public class LoadingViewModel {
   public final ObservableInt loadVisibility = new ObservableInt(View.GONE);
   public final ObservableInt retryVisibility = new ObservableInt(View.GONE);
 
+  public final View.OnClickListener clickRetry = v -> onRetry();
+
   public void loading() {
     visibility.set(View.VISIBLE);
     loadVisibility.set(View.VISIBLE);
@@ -27,7 +29,7 @@ public class LoadingViewModel {
     loadVisibility.set(View.GONE);
   }
 
-  public void clickRetry() {
+  public void onRetry() {
     retryVisibility.set(View.GONE);
     loadVisibility.set(View.VISIBLE);
   }

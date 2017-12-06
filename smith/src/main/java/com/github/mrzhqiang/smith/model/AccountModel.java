@@ -19,7 +19,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.github.mrzhqiang.smith.db.Account.Status.AVAILABLE;
-import static com.github.mrzhqiang.smith.db.Account.Status.DEFAULT;
 import static com.github.mrzhqiang.smith.db.Account.Status.INVALID;
 
 /**
@@ -49,12 +48,13 @@ public final class AccountModel {
         .subscribe(result));
   }
 
-  @AnyThread public void create(List<Account> accounts, @NonNull Result<Login> result) {
+  @AnyThread public void create(List<Account> accounts, @NonNull Result<List<Login>> result) {
     subscription.add(Observable.from(accounts)
         .subscribeOn(Schedulers.io())
         .unsubscribeOn(Schedulers.io())
         .doOnNext(this::newAdd)
         .flatMap(this::loginOrRegister)
+        .toList()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result));
   }
@@ -75,13 +75,13 @@ public final class AccountModel {
       Log.w(TAG, "账号已存在：" + account);
       return;
     }
-    long id = db.insert(Account.TABLE, new Account.Builder().username(account.username())
-        .password(account.password())
-        .status(DEFAULT)
-        .build());
-    // 只有成功的插入才会通知其他订阅者，所以这里抛出异常没毛病
-    if (id == -1) {
-      Log.w(TAG, "错误的插入:" + account);
+    try {
+      db.insert(Account.TABLE, new Account.Builder().username(account.username())
+          .password(account.password())
+          .status(account.status())
+          .build());
+    } catch (Exception ignore) {
+      Log.w(TAG, "ignore [" + account.username() + "] when new add");
     }
   }
 
@@ -93,7 +93,7 @@ public final class AccountModel {
         return true;
       }
     } catch (Exception ignore) {
-      Log.w(TAG, "Ignore a checkExists exception");
+      Log.w(TAG, "ignore [" + username + "] when check exists.");
     }
     return false;
   }
@@ -113,6 +113,10 @@ public final class AccountModel {
     if (login.lastGame() == null) {
       builder.status(INVALID);
     }
-    db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?", account.username());
+    try {
+      db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?", account.username());
+    } catch (Exception ignore) {
+      Log.w(TAG, "ignore [" + account.username() + "] when update by login");
+    }
   }
 }

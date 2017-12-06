@@ -22,7 +22,7 @@ final class DbHelper extends SQLiteOpenHelper {
       + Account.TABLE
       + " ("
       + Account.USERNAME
-      + " TEXT NOT NULL,"
+      + " TEXT PRIMARY KEY NOT NULL,"
       + Account.PASSWORD
       + " TEXT NOT NULL,"
       + Account.STATUS

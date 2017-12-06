@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:onClick="@{(v)->loading.clickRetry()}"
+        android:onClick="@{loading.clickRetry}"
         android:text="@string/load_failed_retry"
         android:visibility="@{loading.retryVisibility}"
         tools:visibility="gone"

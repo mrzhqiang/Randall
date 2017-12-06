@@ -3,6 +3,7 @@ package com.github.mrzhqiang.randall.ui;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +21,10 @@ import com.github.mrzhqiang.randall.viewmodel.EditAccountViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
+  public final ObservableInt editVisibility = new ObservableInt(View.VISIBLE);
   public final ObservableBoolean checkAdvanced = new ObservableBoolean(false);
 
   public final EditAccountViewModel editAccountVM = new EditAccountViewModel();
-
-  public final View.OnClickListener clickRegister = v -> editAccountVM.register(v.getContext());
 
   public final View.OnClickListener clickLogin = v -> editAccountVM.login(v.getContext());
 
@@ -56,14 +56,9 @@ public class LoginActivity extends AppCompatActivity {
     }
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    // 停止状态下，不应该有任何后台操作，后面再看看这样做是否有意义
-    editAccountVM.cancelAll();
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
+    editAccountVM.cancelAll();
     checkAdvanced.removeOnPropertyChangedCallback(advancedCallback);
   }
 }
