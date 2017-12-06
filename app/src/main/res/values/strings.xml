@@ -24,5 +24,6 @@
   <string name="batch_username">批量账号</string>
   <string name="start_index">起始编号</string>
   <string name="create_count">创建数量</string>
+  <string name="advanced_option">高级选项</string>
 
 </resources>

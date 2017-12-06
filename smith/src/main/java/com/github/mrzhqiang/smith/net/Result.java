@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.smith.net;
 
 import android.util.Log;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import rx.Subscriber;
 
@@ -17,11 +19,17 @@ public abstract class Result<T> extends Subscriber<T> {
   }
 
   @Override public void onError(Throwable e) {
-    if (e instanceof UnknownHostException) {
-      onFailed("链接异常，请检查网络");
-      return;
+    String message = e.getMessage();
+    if (e instanceof ConnectException) {
+      message = "连接异常";
     }
-    onFailed(e.getMessage());
+    if (e instanceof SocketTimeoutException) {
+      message = "网络超时";
+    }
+    if (e instanceof UnknownHostException) {
+      message = "连接不上服务器";
+    }
+    onFailed(message);
   }
 
   @Override public void onNext(T t) {

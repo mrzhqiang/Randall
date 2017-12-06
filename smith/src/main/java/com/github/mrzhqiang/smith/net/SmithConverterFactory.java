@@ -1,8 +1,6 @@
 package com.github.mrzhqiang.smith.net;
 
 import android.support.annotation.NonNull;
-import com.github.mrzhqiang.smith.net.html.Form;
-import com.github.mrzhqiang.smith.net.html.Input;
 import com.github.mrzhqiang.smith.net.html.Link;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -37,9 +35,6 @@ final class SmithConverterFactory extends Converter.Factory {
   @Override
   public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
       Retrofit retrofit) {
-    if (type == Home.class) {
-      return new HomeConverter(baseUrl);
-    }
     if (type == Login.class) {
       return new LoginConverter(baseUrl);
     }
@@ -49,71 +44,41 @@ final class SmithConverterFactory extends Converter.Factory {
     return null;
   }
 
-  private static class HomeConverter implements Converter<ResponseBody, Home> {
-
-    final String baseUrl;
-
-    HomeConverter(String baseUrl) {
-      this.baseUrl = baseUrl;
-    }
-
-    @Override public Home convert(@NonNull ResponseBody value) throws IOException {
-      String html = value.string();
-      Document document = Jsoup.parse(html, baseUrl);
-      String title = document.title();
-      Elements elements = document.body().select("a[href]");
-      List<Link> links = new ArrayList<>(elements.size());
-      for (Element element : elements) {
-        String text = element.text();
-        String href = element.absUrl("href");
-        links.add(Link.create(text, href));
-      }
-      return Home.create(title, links);
-    }
-  }
-
   private static class LoginConverter implements Converter<ResponseBody, Login> {
 
     final String baseUrl;
+    final Login.Builder builder;
 
     LoginConverter(String baseUrl) {
       this.baseUrl = baseUrl;
+      builder = Login.builder();
     }
 
     @Override public Login convert(@NonNull ResponseBody body) throws IOException {
       String html = body.string();
       Document document = Jsoup.parse(html, baseUrl);
       String title = document.title();
-
+      builder.title(title);
       Element bodyElement = document.body();
-      // 表单通常只有一个标签
-      Element formElement = bodyElement.getElementsByTag("form").first();
-      String action = formElement.absUrl("action");
-      String method = formElement.attr("method");
-      Elements inputElements = formElement.select("input");
-      List<Input> inputList = new ArrayList<>(inputElements.size());
-      for (Element inputElement : inputElements) {
-        String type = inputElement.attr("type");
-        String name = inputElement.attr("name");
-        String value = inputElement.attr("value");
-        String maxLength = inputElement.attr("maxlength");
-        inputList.add(Input.create(type, name, value, maxLength));
-      }
-      Form form = Form.create(action, method, inputList);
-
-      Link link = null;
+      List<Link> listGame = new ArrayList<>();
       Elements linkElements = bodyElement.select("a[href]");
       for (Element linkElement : linkElements) {
-        if (linkElement.hasText()) {
-          String text = linkElement.text();
-          if (Login.Type.SIGN_UP.check(text) || Login.Type.SIGN_IN.check(text)) {
-            String href = linkElement.absUrl("href");
-            link = Link.create(text, href);
-            break;
+        String text = linkElement.text();
+        if (text.contains("地狱之门")) {
+          String href = linkElement.attr("href");
+          if (href.contains(baseUrl)) {
+            String suffix = linkElement.nextSibling().toString();
+            if (suffix.contains("(")) {
+              text += suffix;
+            }
+            listGame.add(Link.create(text, href));
+          } else {
+            builder.lastGame(Link.create(text, href));
           }
         }
       }
-      return Login.create(title, form, link);
+      builder.listGame(listGame);
+      return builder.build();
     }
   }
 

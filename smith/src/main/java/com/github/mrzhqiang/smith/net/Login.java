@@ -1,37 +1,36 @@
 package com.github.mrzhqiang.smith.net;
 
 import android.os.Parcelable;
-import com.github.mrzhqiang.smith.net.html.Form;
+import android.support.annotation.Nullable;
 import com.github.mrzhqiang.smith.net.html.Link;
 import com.google.auto.value.AutoValue;
+import java.util.List;
 
 @AutoValue public abstract class Login implements Parcelable {
 
   public abstract String title();
 
-  public abstract Form form();
+  @Nullable
+  public abstract Link lastGame();
 
-  public abstract Link link();
+  @Nullable
+  public abstract List<Link> listGame();
 
-  public static Login create(String title, Form form, Link link) {
-    return new AutoValue_Login(title, form, link);
+  public static Login create(String title, Link lastGame, List<Link> listGame) {
+    return builder().title(title).lastGame(lastGame).listGame(listGame).build();
   }
 
-  public enum Type {
-    SIGN_IN("登录>"), SIGN_UP("注册"),;
+  public static Builder builder() {
+    return new AutoValue_Login.Builder();
+  }
 
-    final String value;
+  @AutoValue.Builder public abstract static class Builder {
+    public abstract Builder title(String title);
 
-    Type(String value) {
-      this.value = value;
-    }
+    public abstract Builder lastGame(Link lastGame);
 
-    public boolean check(String text) {
-      return value.equals(text);
-    }
+    public abstract Builder listGame(List<Link> listGame);
 
-    @Override public String toString() {
-      return value;
-    }
+    public abstract Login build();
   }
 }

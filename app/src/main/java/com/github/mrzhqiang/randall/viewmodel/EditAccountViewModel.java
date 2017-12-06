@@ -13,70 +13,98 @@ import com.github.mrzhqiang.smith.model.AccountModel;
 import com.github.mrzhqiang.smith.net.Result;
 
 /**
- * 编辑账号：可输入的用户名和密码
+ * 编辑账号：可输入的用户名和密码，隐藏高级功能：范围建号+随机密码
  *
  * @author mrZQ
  */
 public final class EditAccountViewModel {
 
-  public final ObservableField<String> usernameError = new ObservableField<>();
   public final ObservableField<String> username = new ObservableField<>();
-  public final ObservableField<String> passwordError = new ObservableField<>();
   public final ObservableField<String> password = new ObservableField<>();
+  public final ObservableField<String> usernameError = new ObservableField<>();
+  public final ObservableField<String> passwordError = new ObservableField<>();
 
-  public final ObservableField<String> startIndex = new ObservableField<>("起始编号");
-  public final ObservableField<String> createCount = new ObservableField<>("创建数量");
+  public final ObservableField<String> startIndex = new ObservableField<>();
+  public final ObservableField<String> createCount = new ObservableField<>();
 
   public final ObservableBoolean usernameEnabled = new ObservableBoolean(true);
   public final ObservableBoolean passwordEnabled = new ObservableBoolean(true);
 
   public final ObservableBoolean batchChecked = new ObservableBoolean(false);
   public final ObservableBoolean randomChecked = new ObservableBoolean(false);
-  public final ObservableInt createVisibility = new ObservableInt(View.GONE);
-  public final ObservableInt startVisibility = new ObservableInt(View.GONE);
-  public final ObservableInt randomVisibility = new ObservableInt(View.GONE);
+
+  public final ObservableInt advancedVisibility = new ObservableInt(View.GONE);
+  public final ObservableInt createVisibility = new ObservableInt(View.INVISIBLE);
+  public final ObservableInt startVisibility = new ObservableInt(View.INVISIBLE);
+  public final ObservableInt randomVisibility = new ObservableInt(View.INVISIBLE);
 
   public final View.OnClickListener clickRandom = v -> autoPassword();
+
+  private final Observable.OnPropertyChangedCallback usernameCallback =
+      new Observable.OnPropertyChangedCallback() {
+        @Override public void onPropertyChanged(Observable sender, int propertyId) {
+          String value = username.get();
+          if (checkUsername(value)) {
+            usernameError.set(null);
+          }
+        }
+      };
+  private final Observable.OnPropertyChangedCallback passwordCallback =
+      new Observable.OnPropertyChangedCallback() {
+        @Override public void onPropertyChanged(Observable sender, int propertyId) {
+          String value = password.get();
+          if (checkPassword(value)) {
+            passwordError.set(null);
+          }
+        }
+      };
+  private final Observable.OnPropertyChangedCallback batchCallback =
+      new Observable.OnPropertyChangedCallback() {
+        @Override public void onPropertyChanged(Observable sender, int propertyId) {
+          boolean value = batchChecked.get();
+          usernameEnabled.set(!value);
+          randomChecked.set(value);
+          startVisibility.set(value ? View.VISIBLE : View.INVISIBLE);
+          createVisibility.set(value ? View.VISIBLE : View.INVISIBLE);
+          startIndex.set("0");
+          createCount.set("2");
+        }
+      };
+  private final Observable.OnPropertyChangedCallback randomCallback =
+      new Observable.OnPropertyChangedCallback() {
+        @Override public void onPropertyChanged(Observable sender, int propertyId) {
+          boolean value = randomChecked.get();
+          passwordEnabled.set(!value);
+          randomVisibility.set(value ? View.VISIBLE : View.INVISIBLE);
+          if (value) {
+            autoPassword();
+          }
+        }
+      };
 
   private final AccountModel accountModel = new AccountModel();
 
   public EditAccountViewModel() {
-    username.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-      @Override public void onPropertyChanged(Observable observable, int i) {
-        String value = username.get();
-        if (checkUsername(value)) {
-          usernameError.set(null);
-        }
-      }
-    });
-    password.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-      @Override public void onPropertyChanged(Observable observable, int i) {
-        String value = password.get();
-        if (checkPassword(value)) {
-          passwordError.set(null);
-        }
-      }
-    });
-    batchChecked.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-      @Override public void onPropertyChanged(Observable sender, int propertyId) {
-        boolean value = batchChecked.get();
-        usernameEnabled.set(!value);
-        startVisibility.set(value ? View.VISIBLE : View.GONE);
-        createVisibility.set(value ? View.VISIBLE : View.GONE);
-        startIndex.set("0");
-        createCount.set("2");
-      }
-    });
-    randomChecked.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-      @Override public void onPropertyChanged(Observable sender, int propertyId) {
-        boolean value = randomChecked.get();
-        passwordEnabled.set(!value);
-        randomVisibility.set(value ? View.VISIBLE : View.GONE);
-        if (value) {
-          autoPassword();
-        }
-      }
-    });
+    username.addOnPropertyChangedCallback(usernameCallback);
+    password.addOnPropertyChangedCallback(passwordCallback);
+    batchChecked.addOnPropertyChangedCallback(batchCallback);
+    randomChecked.addOnPropertyChangedCallback(randomCallback);
+  }
+
+  public void advanced(boolean isShow) {
+    advancedVisibility.set(isShow ? View.VISIBLE : View.GONE);
+    if (!isShow) {
+      // 隐藏的时候，将所有的选中状态归位
+      batchChecked.set(false);
+      randomChecked.set(false);
+    }
+  }
+
+  public void register(Context context) {
+  }
+
+  public void login(Context context) {
+
   }
 
   public void addAccount(final Context context) {
@@ -94,7 +122,7 @@ public final class EditAccountViewModel {
       return;
     }
 
-    accountModel.addAccount(username.get(), password.get(), new Result<Account>() {
+    /*accountModel.addAccount(username.get(), password.get(), new Result<Account>() {
       @Override public void onSuccessful(Account result) {
         if (result != null) {
           Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
@@ -104,10 +132,14 @@ public final class EditAccountViewModel {
       @Override public void onFailed(String message) {
         Toast.makeText(context, "添加失败：" + message, Toast.LENGTH_SHORT).show();
       }
-    });
+    });*/
   }
 
   public void cancelAll() {
+    username.removeOnPropertyChangedCallback(usernameCallback);
+    password.removeOnPropertyChangedCallback(passwordCallback);
+    batchChecked.removeOnPropertyChangedCallback(batchCallback);
+    randomChecked.removeOnPropertyChangedCallback(randomCallback);
     accountModel.cancelAll();
   }
 
@@ -134,4 +166,5 @@ public final class EditAccountViewModel {
     int size = (int) (6 + Math.random() * 10);
     password.set(AccountHelper.createPassword(size));
   }
+
 }

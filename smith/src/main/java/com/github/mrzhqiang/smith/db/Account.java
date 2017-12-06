@@ -41,13 +41,9 @@ import rx.functions.Func1;
   public static final class Builder {
     private final ContentValues values = new ContentValues();
 
-    public Builder() {
-    }
-
-    public Builder(Account account) {
-      values.put(USERNAME, Db.encode(account.username()));
-      password(account.password());
-      status(account.status());
+    public Builder username(@NonNull String username) {
+      values.put(USERNAME, Db.encode(username));
+      return this;
     }
 
     public Builder password(@NonNull String password) {

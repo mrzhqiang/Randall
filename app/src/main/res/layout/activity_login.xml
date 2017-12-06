@@ -21,6 +21,17 @@
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:title="@string/login"
         >
+      <android.support.v7.widget.SwitchCompat
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:checked="@={login.checkAdvanced}"
+          android:layout_marginEnd="16dp"
+          android:text="@string/advanced_option"
+          android:textColor="@android:color/white"
+          app:switchPadding="4dp"
+          style="@style/Base.Widget.AppCompat.CompoundButton.Switch"
+          />
     </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,22 +56,20 @@
             app:editAccount="@{login.editAccountVM}"
             />
       </android.support.v7.widget.CardView>
-      <FrameLayout
+      <Space
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
-          >
-        <!--todo loading and retry-->
-      </FrameLayout>
+          />
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
-          android:padding="4dp"
           >
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:layout_weight="1"
             android:onClick="@{login.clickRegister}"
             android:text="@string/register"
@@ -69,6 +78,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:layout_weight="1"
             android:onClick="@{login.clickLogin}"
             android:text="@string/login"

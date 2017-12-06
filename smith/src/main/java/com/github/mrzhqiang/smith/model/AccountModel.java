@@ -1,22 +1,26 @@
 package com.github.mrzhqiang.smith.model;
 
 import android.database.Cursor;
+import android.support.annotation.AnyThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import com.github.mrzhqiang.smith.BaseApp;
 import com.github.mrzhqiang.smith.db.Account;
-import com.github.mrzhqiang.smith.db.DbException;
+import com.github.mrzhqiang.smith.net.Login;
 import com.github.mrzhqiang.smith.net.Result;
+import com.github.mrzhqiang.smith.net.Smith;
 import com.squareup.sqlbrite.BriteDatabase;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Retrofit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.github.mrzhqiang.smith.db.Account.Status.AVAILABLE;
+import static com.github.mrzhqiang.smith.db.Account.Status.DEFAULT;
+import static com.github.mrzhqiang.smith.db.Account.Status.INVALID;
 
 /**
  * 账户模块，包含所有与之相关的网络/本地逻辑
@@ -26,8 +30,8 @@ import rx.subscriptions.CompositeSubscription;
 public final class AccountModel {
   private static final String TAG = "AccountModel";
 
-  @Inject Retrofit net;
   @Inject BriteDatabase db;
+  @Inject Smith smith;
 
   private final CompositeSubscription subscription = new CompositeSubscription();
 
@@ -35,51 +39,53 @@ public final class AccountModel {
     BaseApp.appComponent().inject(this);
   }
 
-  public void addAccount(String username, String password, @NonNull Result<Account> result) {
-    Account account = Account.create(username, password, Account.Status.DEFAULT);
+  @AnyThread public void create(Account account, @NonNull Result<Login> result) {
     subscription.add(Observable.just(account)
-        // 在IO线程上执行
         .subscribeOn(Schedulers.io())
-        // 优先添加到本地数据库
-        .doOnNext(account1 -> {
-          long id = db.insert(Account.TABLE, new Account.Builder(account1).build());
-          // 只有成功的插入才会通知其他订阅者所以这里抛出异常即可
-          if (id == -1) {
-            throw new DbException("新建账号失败");
-          }
-        }).flatMap((Func1<Account, Observable<Account>>) account12 -> {
-          // TODO 基于给定的Account实例，去验证这个账户，如果不存在，直接注册；如果存在，再看结果
-          return null;
-        }).subscribe(result));
-  }
-
-  public void deleteAccount(Account account, @NonNull Result<Boolean> result) {
-    subscription.add(Observable.just(account)
-        .map(account1 -> db.delete(Account.TABLE, Account.USERNAME + "=?", account1.username()) > 0)
+        .unsubscribeOn(Schedulers.io())
+        .doOnNext(this::newAdd)
+        .flatMap(this::loginOrRegister)
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result));
   }
 
-  public void updateAccount(Account account, @NonNull Result<Boolean> result) {
-    subscription.add(Observable.just(account).map(account1 -> {
-      Account.Builder builder =
-          new Account.Builder().password(account1.password()).status(account1.status());
-      return db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?", account1.username())
-          > 0;
-    }).subscribe(result));
+  @AnyThread public void create(List<Account> accounts, @NonNull Result<Login> result) {
+    subscription.add(Observable.from(accounts)
+        .subscribeOn(Schedulers.io())
+        .unsubscribeOn(Schedulers.io())
+        .doOnNext(this::newAdd)
+        .flatMap(this::loginOrRegister)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(result));
   }
 
-  public void queryList(Result<List<Account>> result) {
+  @AnyThread public void queryList(Result<List<Account>> result) {
     subscription.add(db.createQuery(Account.TABLE, Account.QUERY_LIST)
         .mapToList(Account.MAPPER)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result));
   }
 
-  public void cancelAll() {
+  @AnyThread public void cancelAll() {
     subscription.unsubscribe();
   }
 
-  @WorkerThread public boolean checkExists(String username) {
+  @WorkerThread private void newAdd(Account account) {
+    if (checkExists(account.username())) {
+      Log.w(TAG, "账号已存在：" + account);
+      return;
+    }
+    long id = db.insert(Account.TABLE, new Account.Builder().username(account.username())
+        .password(account.password())
+        .status(DEFAULT)
+        .build());
+    // 只有成功的插入才会通知其他订阅者，所以这里抛出异常没毛病
+    if (id == -1) {
+      Log.w(TAG, "错误的插入:" + account);
+    }
+  }
+
+  @WorkerThread private boolean checkExists(String username) {
     try {
       Cursor cursor = db.query(Account.QUERY_LIST + " WHERE " + Account.USERNAME + "=?", username);
       if (cursor != null && cursor.moveToNext()) {
@@ -90,5 +96,23 @@ public final class AccountModel {
       Log.w(TAG, "Ignore a checkExists exception");
     }
     return false;
+  }
+
+  @WorkerThread private Observable<Login> loginOrRegister(Account account) {
+    return smith.getLogin(account.username(), account.password()).flatMap(login -> {
+      Observable<Login> observable = Observable.just(login);
+      if (login.lastGame() == null) {
+        observable = smith.getRegister(account.username(), account.password());
+      }
+      return observable.doOnNext(login1 -> updateByLogin(account, login1));
+    });
+  }
+
+  @WorkerThread private void updateByLogin(Account account, Login login) {
+    Account.Builder builder = new Account.Builder().password(account.password()).status(AVAILABLE);
+    if (login.lastGame() == null) {
+      builder.status(INVALID);
+    }
+    db.update(Account.TABLE, builder.build(), Account.USERNAME + "=?", account.username());
   }
 }

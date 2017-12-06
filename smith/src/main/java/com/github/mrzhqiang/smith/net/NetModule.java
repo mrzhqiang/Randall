@@ -1,15 +1,12 @@
 package com.github.mrzhqiang.smith.net;
 
 import android.app.Application;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import cn.mrzhqiang.logger.Log;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
@@ -18,9 +15,6 @@ import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -41,7 +35,7 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
       @Named("baseUrl") String baseUrl) {
     return new Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(SmithConverterFactory.create(baseUrl))
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .client(client)
         .build();
   }
@@ -60,6 +54,10 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
             String.format(Locale.getDefault(), "Load Image: %s, failed: %s.", uri,
                 exception.getMessage())))
         .build();
+  }
+
+  @Provides @Singleton Smith provideSmith(Retrofit retrofit) {
+    return retrofit.create(Smith.class);
   }
 
   @Module public static final class OkHttpModule {

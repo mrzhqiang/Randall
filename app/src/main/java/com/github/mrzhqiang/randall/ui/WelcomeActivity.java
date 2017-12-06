@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.randall.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -18,14 +17,7 @@ import com.github.mrzhqiang.randall.databinding.ActivityWelcomeBinding;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-  public final View.OnClickListener clickAdd = v -> {
-    // 首先需要的是点击的这个组件的上下文，这样才不至于内存泄漏
-    Context context = v.getContext();
-    Intent intent = new Intent(context, LoginActivity.class);
-    // 跳转时不需要动画，让画面转换得更快
-    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    context.startActivity(intent);
-  };
+  public final View.OnClickListener clickCreate = v -> openLogin();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -36,4 +28,15 @@ public class WelcomeActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
   }
 
+  public void openLogin() {
+    Intent intent = new Intent(this, LoginActivity.class);
+    // 跳转时不需要动画，让页面过度得更快
+    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    startActivity(intent);
+  }
+
+  @Override public void onBackPressed() {
+    // true表示不是根活动，也可以移到后台
+    moveTaskToBack(true);
+  }
 }
