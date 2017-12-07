@@ -79,18 +79,28 @@ final class SmithConverterFactory extends Converter.Factory {
       }
       List<Link> listGame = new ArrayList<>();
       Elements linkElements = bodyElement.select("a[href]");
-      for (Element linkElement : linkElements) {
+      for (int i = 0; i < linkElements.size(); i++) {
+        Element linkElement = linkElements.get(i);
         String text = linkElement.text();
         if (text.contains("地狱之门")) {
           String href = linkElement.attr("href");
+          Link.Builder linkBuilder = Link.builder().text(text).href(href);
           if (href.contains(baseUrl)) {
-            String suffix = linkElement.nextSibling().toString();
-            if (suffix.contains("(")) {
-              text += suffix;
+            if (i == 0) {
+              // 说明是新注册用户
+              linkBuilder.suffix("(推荐登陆)");
+              builder.lastGame(linkBuilder.build());
+              builder.title("注册成功");
+            } else {
+              String suffix = linkElement.nextSibling().toString();
+              if (suffix.contains("(")) {
+                linkBuilder.suffix(suffix);
+              }
+              listGame.add(linkBuilder.build());
             }
-            listGame.add(Link.create(text, href));
           } else {
-            builder.lastGame(Link.create(text, href));
+            linkBuilder.suffix("(推荐登陆)");
+            builder.lastGame(linkBuilder.build());
             builder.title("登陆成功");
           }
         }

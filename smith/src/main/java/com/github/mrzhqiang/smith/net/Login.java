@@ -17,12 +17,14 @@ import java.util.List;
 
   @Nullable public abstract String script();
 
+  @Nullable public abstract String uid();
+
   @Nullable public abstract Account account();
 
   public String asItems() {
     Account a = account();
     if (a != null) {
-      return "账号：" + a.username() + ", 状态：" + title();
+      return a.username() + ":" + title();
     }
     return title();
   }
@@ -34,7 +36,8 @@ import java.util.List;
   public static Builder builder(Login login) {
     return new AutoValue_Login.Builder().title(login.title())
         .lastGame(login.lastGame())
-        .listGame(login.listGame());
+        .listGame(login.listGame())
+        .script(login.script());
   }
 
   @AutoValue.Builder public abstract static class Builder {
@@ -44,9 +47,11 @@ import java.util.List;
 
     public abstract Builder listGame(List<Link> listGame);
 
+    public abstract Builder script(String script);
+
     public abstract Builder account(Account account);
 
-    public abstract Builder script(String script);
+    public abstract Builder uid(String uid);
 
     public abstract Login build();
   }

@@ -202,11 +202,10 @@ public final class EditAccountViewModel {
               .setPositiveButton("完成", (dialog, which) -> {
                 dialog.dismiss();
                 Intent intent = new Intent(context, RandallActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
               })
-              .setNegativeButton("继续", null);
+              .setNegativeButton("继续", null)
+              .show();
         } else {
           onFailed("批量创建无效");
         }

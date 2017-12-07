@@ -2,7 +2,6 @@ package com.github.mrzhqiang.smith.net;
 
 import android.support.annotation.WorkerThread;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;

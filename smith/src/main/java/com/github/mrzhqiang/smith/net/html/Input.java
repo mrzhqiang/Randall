@@ -17,21 +17,4 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_Input(type, name, value, maxLength);
   }
 
-  public enum Type {
-    TEXT("text"), HIDDEN("hidden"), SUBMIT("submit"),;
-
-    final String value;
-
-    Type(String value) {
-      this.value = value;
-    }
-
-    public boolean check(Input input) {
-      return value.equals(input.type());
-    }
-
-    @Override public String toString() {
-      return value;
-    }
-  }
 }
