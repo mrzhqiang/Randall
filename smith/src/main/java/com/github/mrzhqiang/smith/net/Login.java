@@ -2,6 +2,7 @@ package com.github.mrzhqiang.smith.net;
 
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.net.html.Link;
 import com.google.auto.value.AutoValue;
 import java.util.List;
@@ -10,18 +11,30 @@ import java.util.List;
 
   public abstract String title();
 
-  @Nullable
-  public abstract Link lastGame();
+  @Nullable public abstract Link lastGame();
 
-  @Nullable
-  public abstract List<Link> listGame();
+  @Nullable public abstract List<Link> listGame();
 
-  public static Login create(String title, Link lastGame, List<Link> listGame) {
-    return builder().title(title).lastGame(lastGame).listGame(listGame).build();
+  @Nullable public abstract String script();
+
+  @Nullable public abstract Account account();
+
+  public String asItems() {
+    Account a = account();
+    if (a != null) {
+      return "账号：" + a.username() + ", 状态：" + title();
+    }
+    return title();
   }
 
   public static Builder builder() {
     return new AutoValue_Login.Builder();
+  }
+
+  public static Builder builder(Login login) {
+    return new AutoValue_Login.Builder().title(login.title())
+        .lastGame(login.lastGame())
+        .listGame(login.listGame());
   }
 
   @AutoValue.Builder public abstract static class Builder {
@@ -30,6 +43,10 @@ import java.util.List;
     public abstract Builder lastGame(Link lastGame);
 
     public abstract Builder listGame(List<Link> listGame);
+
+    public abstract Builder account(Account account);
+
+    public abstract Builder script(String script);
 
     public abstract Login build();
   }

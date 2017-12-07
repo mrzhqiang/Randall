@@ -2,7 +2,9 @@ package com.github.mrzhqiang.smith.net;
 
 import android.support.annotation.WorkerThread;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -12,12 +14,12 @@ import rx.Observable;
  */
 public interface Smith {
 
-  @WorkerThread @GET("/cardh.php?action=register") Observable<Login> getRegister(
+  /** 注册的接口也可以用来登陆，所以不用担心重复注册的问题 */
+  @WorkerThread @GET("/cardh.php?action=register") Observable<Login> getLogin(
       @Query("username") String username, @Query("password") String password);
 
-  @WorkerThread @GET("/cardh.php?action=passport") Observable<Login> getLogin(
-      @Query("name") String username, @Query("pwd") String password);
-
+  /** 直接用注册接口登陆，可能需要中转一下，试试这个 */
+  @WorkerThread @GET Observable<Login> getLogin(@Url String scripUrl);
 
   /* 暂时不使用全能模式，因为目前只有一款游戏适配 */
   /*@GET("/") Observable<Home> home();

@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.smith.model;
 
-import android.database.Cursor;
 import android.support.annotation.AnyThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
@@ -11,12 +10,16 @@ import com.github.mrzhqiang.smith.net.Login;
 import com.github.mrzhqiang.smith.net.Result;
 import com.github.mrzhqiang.smith.net.Smith;
 import com.squareup.sqlbrite.BriteDatabase;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 import static com.github.mrzhqiang.smith.db.Account.Status.AVAILABLE;
 import static com.github.mrzhqiang.smith.db.Account.Status.INVALID;
@@ -32,14 +35,14 @@ public final class AccountModel {
   @Inject BriteDatabase db;
   @Inject Smith smith;
 
-  private final CompositeSubscription subscription = new CompositeSubscription();
+  private final Set<Subscription> subscriptions = new HashSet<>();
 
   public AccountModel() {
     BaseApp.appComponent().inject(this);
   }
 
   @AnyThread public void create(Account account, @NonNull Result<Login> result) {
-    subscription.add(Observable.just(account)
+    subscriptions.add(Observable.just(account)
         .subscribeOn(Schedulers.io())
         .unsubscribeOn(Schedulers.io())
         .doOnNext(this::newAdd)
@@ -49,7 +52,7 @@ public final class AccountModel {
   }
 
   @AnyThread public void create(List<Account> accounts, @NonNull Result<List<Login>> result) {
-    subscription.add(Observable.from(accounts)
+    subscriptions.add(Observable.from(accounts)
         .subscribeOn(Schedulers.io())
         .unsubscribeOn(Schedulers.io())
         .doOnNext(this::newAdd)
@@ -60,21 +63,26 @@ public final class AccountModel {
   }
 
   @AnyThread public void queryList(Result<List<Account>> result) {
-    subscription.add(db.createQuery(Account.TABLE, Account.QUERY_LIST)
+    subscriptions.add(db.createQuery(Account.TABLE, Account.QUERY_LIST)
         .mapToList(Account.MAPPER)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result));
   }
 
   @AnyThread public void cancelAll() {
-    subscription.unsubscribe();
+    for (Subscription subscription : subscriptions) {
+      if (!subscription.isUnsubscribed()) {
+        subscription.unsubscribe();
+      }
+    }
+    subscriptions.clear();
   }
 
   @WorkerThread private void newAdd(Account account) {
-    if (checkExists(account.username())) {
+    /*if (checkExists(account.username())) {
       Log.w(TAG, "账号已存在：" + account);
       return;
-    }
+    }*/
     try {
       db.insert(Account.TABLE, new Account.Builder().username(account.username())
           .password(account.password())
@@ -85,7 +93,7 @@ public final class AccountModel {
     }
   }
 
-  @WorkerThread private boolean checkExists(String username) {
+  /*@WorkerThread private boolean checkExists(String username) {
     try {
       Cursor cursor = db.query(Account.QUERY_LIST + " WHERE " + Account.USERNAME + "=?", username);
       if (cursor != null && cursor.moveToNext()) {
@@ -96,19 +104,30 @@ public final class AccountModel {
       Log.w(TAG, "ignore [" + username + "] when check exists.");
     }
     return false;
-  }
+  }*/
 
   @WorkerThread private Observable<Login> loginOrRegister(Account account) {
-    return smith.getLogin(account.username(), account.password()).flatMap(login -> {
-      Observable<Login> observable = Observable.just(login);
-      if (login.lastGame() == null) {
-        observable = smith.getRegister(account.username(), account.password());
-      }
-      return observable.doOnNext(login1 -> updateByLogin(account, login1));
-    });
+    return smith.getLogin(account.username(), account.password())
+        .flatMap(this::scriptLogin)
+        // 批量创建的话，延迟500ms不过分
+        .delay(500, TimeUnit.MILLISECONDS)
+        .map(login1 -> Login.builder(login1).account(account).build())
+        // 间隔300ms让数据库轻松点
+        .delay(300, TimeUnit.MILLISECONDS)
+        .doOnNext(this::updateByLogin);
   }
 
-  @WorkerThread private void updateByLogin(Account account, Login login) {
+  @WorkerThread private Observable<Login> scriptLogin(Login login) {
+    Observable<Login> observable = Observable.just(login);
+    if (login.script() != null) {
+      observable = smith.getLogin(login.script());
+    }
+    return observable;
+  }
+
+  @WorkerThread private void updateByLogin(Login login) {
+    Account account = login.account();
+    if (account == null) return;
     Account.Builder builder = new Account.Builder().password(account.password()).status(AVAILABLE);
     if (login.lastGame() == null) {
       builder.status(INVALID);

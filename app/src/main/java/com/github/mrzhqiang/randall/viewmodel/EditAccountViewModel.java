@@ -1,11 +1,14 @@
 package com.github.mrzhqiang.randall.viewmodel;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import cn.mrzhqiang.helper.AccountHelper;
@@ -70,7 +73,9 @@ public final class EditAccountViewModel {
         @Override public void onPropertyChanged(Observable sender, int propertyId) {
           boolean value = batchChecked.get();
           usernameEnabled.set(!value);
-          randomChecked.set(value);
+          if (TextUtils.isEmpty(passwordText.get())) {
+            randomChecked.set(value);
+          }
           startVisibility.set(value ? View.VISIBLE : View.INVISIBLE);
           createVisibility.set(value ? View.VISIBLE : View.INVISIBLE);
           startIndex.set("0");
@@ -114,31 +119,31 @@ public final class EditAccountViewModel {
 
     String username = usernameText.get();
     String password = passwordText.get();
-    if (!checkUsername(username)) {
-      usernameError.set("请输入7-15位数字或字母");
-      return;
-    }
-
-    if (!checkPassword(password)) {
-      passwordError.set("请输入6-15位数字或字母");
-      return;
-    }
 
     boolean batch = batchChecked.get();
     // 非批量创建，则按照正常流程走一走
     if (!batch) {
+      if (!checkUsername(username)) {
+        usernameError.set("请输入7-15位数字或字母");
+        return;
+      }
+
+      if (!checkPassword(password)) {
+        passwordError.set("请输入6-15位数字或字母");
+        return;
+      }
+
       showLoading();
       Account account = Account.create(username, password, Account.Status.DEFAULT);
       accountModel.create(account, new Result<Login>() {
         @Override public void onSuccessful(Login result) {
+          Toast.makeText(context, result.title(), Toast.LENGTH_SHORT).show();
+          hideLoading();
           if (result.lastGame() != null) {
-            hideLoading();
             Intent intent = new Intent(context, RandallActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(intent);
-          } else {
-            onFailed("登陆失败：" + result);
           }
         }
 
@@ -164,29 +169,44 @@ public final class EditAccountViewModel {
     }
     // 用户名不区分大小写，但密码区分
     String[] names = AccountHelper.autoUsernames(username, start, count);
+    if (!checkUsername(names[0])) {
+      usernameError.set("错误的起始账号，长度必须在7-15之间");
+      return;
+    }
     List<Account> accounts = new ArrayList<>();
     boolean random = randomChecked.get();
+    if (!random && !checkPassword(password)) {
+      passwordError.set("错误的固定密码，长度必须在6-15位之间");
+      return;
+    }
     for (String name : names) {
-      // 如果用户名符合要求，才进行账户的创建，这样避免了很多麻烦
       username = name;
-      if (checkUsername(username)) {
-        // 如果是随机密码，则每个账号的密码都随机一下；否则全部都一样
-        if (random) {
-          autoPassword();
-        }
+      // 如果是随机密码，则每个账号的密码都随机一下；否则全部都一样
+      if (random) {
+        autoPassword();
         password = passwordText.get();
-        accounts.add(Account.create(username, password, Account.Status.DEFAULT));
       }
+      accounts.add(Account.create(username, password, Account.Status.DEFAULT));
     }
     showLoading();
     accountModel.create(accounts, new Result<List<Login>>() {
       @Override public void onSuccessful(List<Login> result) {
         if (result.size() > 0) {
           hideLoading();
-          Intent intent = new Intent(context, RandallActivity.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-          context.startActivity(intent);
+          String[] items = new String[result.size()];
+          for (int i = 0; i < result.size(); i++) {
+            items[i] = result.get(i).asItems();
+          }
+          new AlertDialog.Builder(context).setTitle("批量创建")
+              .setItems(items, null)
+              .setPositiveButton("完成", (dialog, which) -> {
+                dialog.dismiss();
+                Intent intent = new Intent(context, RandallActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+              })
+              .setNegativeButton("继续", null);
         } else {
           onFailed("批量创建无效");
         }

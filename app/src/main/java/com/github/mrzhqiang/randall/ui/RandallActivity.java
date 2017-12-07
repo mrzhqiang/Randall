@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityRandallBinding;
@@ -36,6 +38,20 @@ public class RandallActivity extends AppCompatActivity {
     setSupportActionBar(binding.toolbar);
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_randall, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.edit_account:
+        openLoginActivity();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override protected void onResume() {
     super.onResume();
 
@@ -62,7 +78,6 @@ public class RandallActivity extends AppCompatActivity {
       }
 
       @Override public void onFailed(String message) {
-        // TODO 做一些处理
         Toast.makeText(RandallActivity.this, message, Toast.LENGTH_SHORT).show();
       }
     });
@@ -71,5 +86,13 @@ public class RandallActivity extends AppCompatActivity {
   @Override protected void onPause() {
     super.onPause();
     accountModel.cancelAll();
+  }
+
+  private void openLoginActivity() {
+    Intent intent = new Intent(this, LoginActivity.class);
+    if (accountList.size() > 0) {
+      intent.putExtra("account", accountList.get(0));
+    }
+    startActivity(intent);
   }
 }

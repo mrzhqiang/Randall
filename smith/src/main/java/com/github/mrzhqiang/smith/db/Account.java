@@ -32,7 +32,7 @@ import rx.functions.Func1;
   public static final String QUERY_LIST = "SELECT * FROM " + TABLE;
 
   public static final Func1<Cursor, Account> MAPPER = cursor -> {
-    String username = Db.decode(Db.getString(cursor, USERNAME));
+    String username = Db.getString(cursor, USERNAME);
     String password = Db.decode(Db.getString(cursor, PASSWORD));
     Status status = Status.values()[Db.getInt(cursor, STATUS)];
     return create(username, password, status);
@@ -42,7 +42,7 @@ import rx.functions.Func1;
     private final ContentValues values = new ContentValues();
 
     public Builder username(@NonNull String username) {
-      values.put(USERNAME, Db.encode(username));
+      values.put(USERNAME, username);
       return this;
     }
 

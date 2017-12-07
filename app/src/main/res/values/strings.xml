@@ -25,5 +25,6 @@
   <string name="start_index">起始编号</string>
   <string name="create_count">创建数量</string>
   <string name="advanced_option">高级选项</string>
+  <string name="edit_account">编辑账号</string>
 
 </resources>

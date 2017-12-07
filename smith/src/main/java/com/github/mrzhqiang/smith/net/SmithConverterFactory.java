@@ -11,6 +11,7 @@ import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -60,6 +61,22 @@ final class SmithConverterFactory extends Converter.Factory {
       String title = document.title();
       builder.title(title);
       Element bodyElement = document.body();
+      Element scriptElement = bodyElement.selectFirst("script");
+      if (scriptElement != null) {
+        String dataScript = scriptElement.data();
+        if (!dataScript.isEmpty()) {
+          // 账号密码正确，跳转一下
+          dataScript = dataScript.split("=", 2)[1].replace("'", "").replace(";", "");
+          dataScript = baseUrl + "/" + dataScript;
+          builder.script(dataScript);
+        }
+      } else {
+        Node registerNode = bodyElement.child(0).childNode(0);
+        if ("#text".equals(registerNode.nodeName())) {
+          // 注册失败，通常是账号已存在，但密码不对；如果账号密码正确，会有一个跳转的script
+          builder.title(registerNode.toString());
+        }
+      }
       List<Link> listGame = new ArrayList<>();
       Elements linkElements = bodyElement.select("a[href]");
       for (Element linkElement : linkElements) {
@@ -74,6 +91,7 @@ final class SmithConverterFactory extends Converter.Factory {
             listGame.add(Link.create(text, href));
           } else {
             builder.lastGame(Link.create(text, href));
+            builder.title("登陆成功");
           }
         }
       }
