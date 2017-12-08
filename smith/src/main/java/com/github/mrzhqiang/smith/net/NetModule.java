@@ -18,15 +18,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import rx.schedulers.Schedulers;
 
 import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
-/**
- * 提供网络相关依赖
- *
- * @author mrZQ
- */
 @Module(includes = {
     NetModule.OkHttpModule.class,
 }) public final class NetModule {

@@ -9,12 +9,6 @@ import android.view.View;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityWelcomeBinding;
 
-/**
- * 欢迎页面
- *
- * @author mrZQ
- */
-
 public class WelcomeActivity extends AppCompatActivity {
 
   public final View.OnClickListener clickCreate = v -> openLogin();

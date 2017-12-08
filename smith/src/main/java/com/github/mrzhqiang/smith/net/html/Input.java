@@ -16,5 +16,4 @@ import com.google.auto.value.AutoValue;
   public static Input create(String type, String name, String value, String maxLength) {
     return new AutoValue_Input(type, name, value, maxLength);
   }
-
 }

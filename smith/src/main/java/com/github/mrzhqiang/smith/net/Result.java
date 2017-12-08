@@ -6,11 +6,6 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import rx.Subscriber;
 
-/**
- * 网络回调的统一处理，应用层只需要知道这个类即可，不关心底层依赖
- *
- * @author mrZQ
- */
 public abstract class Result<T> extends Subscriber<T> {
   private static final String TAG = "Result";
 

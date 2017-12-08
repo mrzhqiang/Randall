@@ -18,11 +18,6 @@ import com.github.mrzhqiang.smith.model.AccountModel;
 import com.github.mrzhqiang.smith.net.Result;
 import java.util.List;
 
-/**
- * 兰达尔主页
- *
- * @author mrZQ
- */
 public class RandallActivity extends AppCompatActivity {
 
   public final ObservableArrayList<Account> accountList = new ObservableArrayList<>();

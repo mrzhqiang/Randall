@@ -3,29 +3,30 @@ package com.github.mrzhqiang.smith.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import cn.mrzhqiang.logger.Log;
 
-/**
- * 数据库辅助
- *
- * @author mrZQ
- */
+import static com.github.mrzhqiang.smith.db.Account.*;
+
 final class DbHelper extends SQLiteOpenHelper {
   private static final String TAG = "DbHelper";
 
   private static final String DB_NAME = "smith.db";
   private static final int VERSION = 1;
 
-  private static final String CREATE_ACCOUNT = ""
-      + "CREATE TABLE "
-      + Account.TABLE
+  private static final String CREATE_ACCOUNT = "CREATE TABLE "
+      + TABLE
       + " ("
-      + Account.USERNAME
-      + " TEXT PRIMARY KEY NOT NULL,"
-      + Account.PASSWORD
-      + " TEXT NOT NULL,"
-      + Account.STATUS
+      + USERNAME
+      + " char(15) NOT NULL PRIMARY KEY,"
+      + PASSWORD
+      + " char(15) NOT NULL,"
+      + STATUS
+      + " INTEGER NOT NULL DEFAULT 0,"
+      + ALIAS
+      + " char(20),"
+      + UPDATED
       + " INTEGER NOT NULL DEFAULT 0"
       + ")";
 

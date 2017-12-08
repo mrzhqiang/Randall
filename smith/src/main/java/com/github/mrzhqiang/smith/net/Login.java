@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.net.html.Link;
 import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import java.util.List;
 
 @AutoValue public abstract class Login implements Parcelable {
@@ -17,8 +19,6 @@ import java.util.List;
 
   @Nullable public abstract String script();
 
-  @Nullable public abstract String uid();
-
   @Nullable public abstract Account account();
 
   public String asItems() {
@@ -29,15 +29,22 @@ import java.util.List;
     return title();
   }
 
-  public static Builder builder() {
-    return new AutoValue_Login.Builder();
+  public static Login create(String title, Link lastGame, List<Link> listGame, String script,
+      Account account) {
+    return builder().title(title)
+        .lastGame(lastGame)
+        .listGame(listGame)
+        .script(script)
+        .account(account)
+        .build();
   }
 
-  public static Builder builder(Login login) {
-    return new AutoValue_Login.Builder().title(login.title())
-        .lastGame(login.lastGame())
-        .listGame(login.listGame())
-        .script(login.script());
+  public static TypeAdapter<Login> typeAdapter(Gson gson) {
+    return new AutoValue_Login.GsonTypeAdapter(gson);
+  }
+
+  public static Builder builder() {
+    return new AutoValue_Login.Builder();
   }
 
   @AutoValue.Builder public abstract static class Builder {
@@ -50,8 +57,6 @@ import java.util.List;
     public abstract Builder script(String script);
 
     public abstract Builder account(Account account);
-
-    public abstract Builder uid(String uid);
 
     public abstract Login build();
   }

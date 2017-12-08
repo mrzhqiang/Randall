@@ -18,13 +18,9 @@ import com.github.mrzhqiang.smith.model.AccountModel;
 import com.github.mrzhqiang.smith.net.Login;
 import com.github.mrzhqiang.smith.net.Result;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * 编辑账号：可输入的用户名和密码，高级功能：范围建号+随机密码
- *
- * @author mrZQ
- */
 public final class EditAccountViewModel {
 
   public final ObservableField<String> usernameText = new ObservableField<>();
@@ -134,16 +130,19 @@ public final class EditAccountViewModel {
       }
 
       showLoading();
-      Account account = Account.create(username, password, Account.Status.DEFAULT);
+      Account account =
+          Account.create(username, password, Account.Status.DEFAULT, null, new Date());
       accountModel.create(account, new Result<Login>() {
         @Override public void onSuccessful(Login result) {
-          Toast.makeText(context, result.title(), Toast.LENGTH_SHORT).show();
-          hideLoading();
           if (result.lastGame() != null) {
+            hideLoading();
+            Toast.makeText(context, result.title(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, RandallActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(intent);
+          } else {
+            onFailed(result.title());
           }
         }
 
@@ -186,7 +185,7 @@ public final class EditAccountViewModel {
         autoPassword();
         password = passwordText.get();
       }
-      accounts.add(Account.create(username, password, Account.Status.DEFAULT));
+      accounts.add(Account.create(username, password, Account.Status.DEFAULT, null, new Date()));
     }
     showLoading();
     accountModel.create(accounts, new Result<List<Login>>() {

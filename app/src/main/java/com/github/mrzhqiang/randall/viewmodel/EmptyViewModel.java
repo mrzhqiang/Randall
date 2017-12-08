@@ -7,9 +7,6 @@ import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 
-/**
- * 内容为空时的提示
- */
 public final class EmptyViewModel {
 
   @BindingAdapter("emptyIcon")

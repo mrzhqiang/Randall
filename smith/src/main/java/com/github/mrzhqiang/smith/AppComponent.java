@@ -6,11 +6,6 @@ import com.squareup.picasso.Picasso;
 import dagger.Component;
 import javax.inject.Singleton;
 
-/**
- * 应用级别的依赖注入接口
- *
- * @author mrZQ
- */
 @Singleton @Component(modules = AppModule.class) public interface AppComponent {
 
   Picasso picasso();

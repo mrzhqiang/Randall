@@ -13,12 +13,6 @@ import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityLoginBinding;
 import com.github.mrzhqiang.randall.viewmodel.EditAccountViewModel;
 
-/**
- * 登陆/注册页面
- *
- * @author mrZQ
- */
-
 public class LoginActivity extends AppCompatActivity {
 
   public final ObservableInt editVisibility = new ObservableInt(View.VISIBLE);

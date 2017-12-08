@@ -15,5 +15,4 @@ import java.util.List;
   public static Form create(String action, String method, List<Input> inputList) {
     return new AutoValue_Form(action, method, inputList);
   }
-
 }

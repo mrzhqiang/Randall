@@ -3,13 +3,14 @@ package com.github.mrzhqiang.smith.net.html;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 
 @AutoValue public abstract class Link implements Parcelable {
 
   public abstract String text();
 
-  @Nullable
-  public abstract String suffix();
+  @Nullable public abstract String suffix();
 
   public abstract String href();
 
@@ -25,5 +26,9 @@ import com.google.auto.value.AutoValue;
     public abstract Builder href(String href);
 
     public abstract Link build();
+  }
+
+  public static TypeAdapter<Link> typeAdapter(Gson gson) {
+    return new AutoValue_Link.GsonTypeAdapter(gson);
   }
 }

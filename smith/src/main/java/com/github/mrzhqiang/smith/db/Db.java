@@ -4,11 +4,6 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
-/**
- * 数据库常量及便捷方法
- *
- * @author mrZQ
- */
 public final class Db {
   public static final int BOOLEAN_FALSE = 0;
   public static final int BOOLEAN_TRUE = 1;

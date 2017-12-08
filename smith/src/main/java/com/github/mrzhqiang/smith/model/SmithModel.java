@@ -6,11 +6,6 @@ import javax.inject.Inject;
 import retrofit2.Retrofit;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * 兰达尔模块，加载并解析网页内容
- *
- * @author mrZQ
- */
 public final class SmithModel {
   private static final String TAG = "SmithModel";
 

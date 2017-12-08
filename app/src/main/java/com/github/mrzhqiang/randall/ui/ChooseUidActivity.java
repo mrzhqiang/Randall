@@ -10,9 +10,6 @@ import android.widget.Toast;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityChooseUidBinding;
 
-/**
- * 主页，展示账户列表
- */
 public class ChooseUidActivity extends AppCompatActivity {
   private static final String TAG = "ChooseUidActivity";
 

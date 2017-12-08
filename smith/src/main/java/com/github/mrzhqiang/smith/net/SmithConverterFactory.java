@@ -16,11 +16,6 @@ import org.jsoup.select.Elements;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-/**
- * Haowanba源码转换为java对象的工厂
- *
- * @author mrZQ
- */
 final class SmithConverterFactory extends Converter.Factory {
 
   public static SmithConverterFactory create(String baseUrl) {
@@ -61,11 +56,12 @@ final class SmithConverterFactory extends Converter.Factory {
       String title = document.title();
       builder.title(title);
       Element bodyElement = document.body();
+      // FIXME 或许有更好的查询手段，目前就这样吧
       Element scriptElement = bodyElement.selectFirst("script");
       if (scriptElement != null) {
         String dataScript = scriptElement.data();
         if (!dataScript.isEmpty()) {
-          // 账号密码正确，跳转一下
+          // 注册接口的话，出现跳转只会是：账号密码正确
           dataScript = dataScript.split("=", 2)[1].replace("'", "").replace(";", "");
           dataScript = baseUrl + "/" + dataScript;
           builder.script(dataScript);
@@ -74,7 +70,7 @@ final class SmithConverterFactory extends Converter.Factory {
         Node registerNode = bodyElement.child(0).childNode(0);
         if ("#text".equals(registerNode.nodeName())) {
           // 注册失败，通常是账号已存在，但密码不对；如果账号密码正确，会有一个跳转的script
-          builder.title(registerNode.toString());
+          builder.title("失败(无法注册，账号已存在)");
         }
       }
       List<Link> listGame = new ArrayList<>();
@@ -88,9 +84,8 @@ final class SmithConverterFactory extends Converter.Factory {
           if (href.contains(baseUrl)) {
             if (i == 0) {
               // 说明是新注册用户
-              linkBuilder.suffix("(推荐登陆)");
-              builder.lastGame(linkBuilder.build());
-              builder.title("注册成功");
+              builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
+              builder.title("成功(注册新账号)");
             } else {
               String suffix = linkElement.nextSibling().toString();
               if (suffix.contains("(")) {
@@ -99,9 +94,8 @@ final class SmithConverterFactory extends Converter.Factory {
               listGame.add(linkBuilder.build());
             }
           } else {
-            linkBuilder.suffix("(推荐登陆)");
-            builder.lastGame(linkBuilder.build());
-            builder.title("登陆成功");
+            builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
+            builder.title("成功(欢迎回来)");
           }
         }
       }

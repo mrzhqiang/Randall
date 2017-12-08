@@ -6,18 +6,13 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
 
-/**
- * 来自 <a href="http://haowanba.com">好玩吧</a> 的接口
- *
- * @author mrZQ
- */
 public interface Smith {
 
-  /** 注册的接口也可以用来登陆，所以不用担心重复注册的问题 */
+  /** 注册/登陆接口 */
   @WorkerThread @GET("/cardh.php?action=register") Observable<Login> getLogin(
       @Query("username") String username, @Query("password") String password);
 
-  /** 直接用注册接口登陆，可能需要中转一下，试试这个 */
+  /** 通过注册时返回的链接进行登陆 */
   @WorkerThread @GET Observable<Login> getLogin(@Url String scripUrl);
 
   /* 暂时不使用全能模式，因为目前只有一款游戏适配 */
