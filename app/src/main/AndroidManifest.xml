@@ -28,7 +28,7 @@
         android:screenOrientation="portrait"/>
 
     <activity
-        android:name=".ui.LoginActivity"
+        android:name=".ui.AddAccountActivity"
         android:label="@string/login_label"
         android:noHistory="true"/>
 

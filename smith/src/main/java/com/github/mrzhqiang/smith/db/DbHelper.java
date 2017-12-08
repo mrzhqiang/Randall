@@ -22,12 +22,8 @@ final class DbHelper extends SQLiteOpenHelper {
       + " char(15) NOT NULL PRIMARY KEY,"
       + PASSWORD
       + " char(15) NOT NULL,"
-      + STATUS
-      + " INTEGER NOT NULL DEFAULT 0,"
-      + ALIAS
-      + " char(20),"
-      + UPDATED
-      + " INTEGER NOT NULL DEFAULT 0"
+      + DATA
+      + " TEXT"
       + ")";
 
   DbHelper(@NonNull Context context) {

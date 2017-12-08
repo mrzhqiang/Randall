@@ -2,7 +2,6 @@ package com.github.mrzhqiang.smith.net;
 
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.net.html.Link;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
@@ -19,24 +18,8 @@ import java.util.List;
 
   @Nullable public abstract String script();
 
-  @Nullable public abstract Account account();
-
-  public String asItems() {
-    Account a = account();
-    if (a != null) {
-      return a.username() + ":" + title();
-    }
-    return title();
-  }
-
-  public static Login create(String title, Link lastGame, List<Link> listGame, String script,
-      Account account) {
-    return builder().title(title)
-        .lastGame(lastGame)
-        .listGame(listGame)
-        .script(script)
-        .account(account)
-        .build();
+  public static Login create(String title, Link lastGame, List<Link> listGame, String script) {
+    return builder().title(title).lastGame(lastGame).listGame(listGame).script(script).build();
   }
 
   public static TypeAdapter<Login> typeAdapter(Gson gson) {
@@ -55,8 +38,6 @@ import java.util.List;
     public abstract Builder listGame(List<Link> listGame);
 
     public abstract Builder script(String script);
-
-    public abstract Builder account(Account account);
 
     public abstract Login build();
   }

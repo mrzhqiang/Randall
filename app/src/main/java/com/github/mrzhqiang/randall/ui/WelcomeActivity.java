@@ -23,7 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
   }
 
   public void openLogin() {
-    Intent intent = new Intent(this, LoginActivity.class);
+    Intent intent = new Intent(this, AddAccountActivity.class);
     // 跳转时不需要动画，让页面过度得更快
     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
     startActivity(intent);

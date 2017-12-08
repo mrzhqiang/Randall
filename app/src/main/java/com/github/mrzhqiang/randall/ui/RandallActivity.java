@@ -84,7 +84,7 @@ public class RandallActivity extends AppCompatActivity {
   }
 
   private void openLoginActivity() {
-    Intent intent = new Intent(this, LoginActivity.class);
+    Intent intent = new Intent(this, AddAccountActivity.class);
     if (accountList.size() > 0) {
       intent.putExtra("account", accountList.get(0));
     }
