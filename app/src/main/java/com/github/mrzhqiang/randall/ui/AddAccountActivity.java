@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.randall.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
@@ -41,7 +40,7 @@ public class AddAccountActivity extends AppCompatActivity {
   public final ObservableField<String> createCount = new ObservableField<>();
 
   public final View.OnClickListener clickRandom = v -> autoPassword();
-  public final View.OnClickListener clickAdd = v -> addAccount(v.getContext());
+  public final View.OnClickListener clickAdd = v -> addAccount();
 
   private final Observable.OnPropertyChangedCallback advancedCallback =
       new Observable.OnPropertyChangedCallback() {
@@ -128,7 +127,7 @@ public class AddAccountActivity extends AppCompatActivity {
     addEnabled.set(true);
   }
 
-  private void addAccount(Context context) {
+  private void addAccount() {
     Account account = editAccountVM.getAccount();
     if (account == null) {
       return;
@@ -139,26 +138,25 @@ public class AddAccountActivity extends AppCompatActivity {
       accountModel.create(account, new Result<Account>() {
         @Override public void onSuccessful(Account result) {
           hideLoading();
-          Toast.makeText(context, "创建成功", Toast.LENGTH_SHORT).show();
-          Intent intent = new Intent(context, RandallActivity.class);
-          context.startActivity(intent);
+          showToast("创建成功");
+          openRandall();
         }
 
         @Override public void onFailed(String message) {
           super.onFailed(message);
           hideLoading();
-          Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+          showToast(message);
         }
       });
     } else {
       int start = Integer.parseInt(startIndex.get());
       int count = Integer.parseInt(createCount.get());
       if (start < 0) {
-        Toast.makeText(context, "错误的起始编号：" + start + ", 请设置0-99的整数", Toast.LENGTH_SHORT).show();
+        showToast("错误的起始编号：" + start + ", 请设置0-99的整数");
         return;
       }
       if (count < 2) {
-        Toast.makeText(context, "错误的批量创建：" + count + ", 请设置2-99的整数", Toast.LENGTH_SHORT).show();
+        showToast("错误的批量创建：" + count + ", 请设置2-99的整数");
         return;
       }
       showLoading();
@@ -170,12 +168,11 @@ public class AddAccountActivity extends AppCompatActivity {
             for (int i = 0; i < result.size(); i++) {
               items[i] = (i + 1) + "-" + result.get(i).username();
             }
-            new AlertDialog.Builder(context).setTitle("批量创建")
+            new AlertDialog.Builder(AddAccountActivity.this).setTitle("批量创建")
                 .setItems(items, null)
                 .setPositiveButton("完成", (dialog, which) -> {
                   dialog.dismiss();
-                  Intent intent = new Intent(context, RandallActivity.class);
-                  context.startActivity(intent);
+                  openRandall();
                 })
                 .setNegativeButton("继续", null)
                 .show();
@@ -187,9 +184,19 @@ public class AddAccountActivity extends AppCompatActivity {
         @Override public void onFailed(String message) {
           super.onFailed(message);
           hideLoading();
-          Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+          showToast(message);
         }
       });
     }
+  }
+
+  private void showToast(String message) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+  }
+
+  private void openRandall() {
+    Intent intent = new Intent(this, RandallActivity.class);
+    startActivity(intent);
+    finish();
   }
 }

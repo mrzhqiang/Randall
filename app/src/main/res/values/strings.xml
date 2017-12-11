@@ -5,7 +5,7 @@
   <item name="visible" type="id"/>
   <item name="masked" type="id"/>
 
-  <string name="welcome_label">欢迎使用兰达尔</string>
+  <string name="welcome_label">欢迎</string>
   <string name="application_logo">应用图标</string>
   <string name="welcome_header">关于地狱之门</string>
   <string name="welcome_text">一款网页文字游戏，主城叫兰达尔。\n三大职业：战士、魔法师、弓箭手。\n精彩活动：攻城、抽奖、许愿、魔军。\n欢迎加入地狱大家庭。</string>

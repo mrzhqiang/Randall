@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.smith.model;
 
-import com.github.mrzhqiang.smith.BaseApp;
+import com.github.mrzhqiang.smith.SmithApp;
 import com.squareup.sqlbrite.BriteDatabase;
 import javax.inject.Inject;
 import retrofit2.Retrofit;
@@ -15,7 +15,7 @@ public final class SmithModel {
   public final CompositeSubscription subscriptions = new CompositeSubscription();
 
   public SmithModel() {
-    BaseApp.appComponent().inject(this);
+    SmithApp.appComponent().inject(this);
   }
 
 }

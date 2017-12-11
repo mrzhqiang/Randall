@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.randall;
 
-import com.github.mrzhqiang.smith.BaseApp;
+import com.github.mrzhqiang.smith.SmithApp;
 
-public final class RandallApp extends BaseApp {
+public final class RandallApp extends SmithApp {
 
   public static final String BASE_URL = "http://haowanba.com";
 

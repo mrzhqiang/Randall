@@ -11,9 +11,9 @@ import javax.inject.Singleton;
 @Module(includes = {
     DbModule.class, NetModule.class,
 }) final class AppModule {
-  private final BaseApp app;
+  private final SmithApp app;
 
-  AppModule(BaseApp app) {
+  AppModule(SmithApp app) {
     this.app = app;
   }
 

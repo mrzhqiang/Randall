@@ -53,8 +53,6 @@ final class SmithConverterFactory extends Converter.Factory {
     @Override public Login convert(@NonNull ResponseBody body) throws IOException {
       String html = body.string();
       Document document = Jsoup.parse(html, baseUrl);
-      String title = document.title();
-      builder.title(title);
       Element bodyElement = document.body();
       // FIXME 或许有更好的查询手段，目前就这样吧
       Element scriptElement = bodyElement.selectFirst("script");
@@ -70,7 +68,7 @@ final class SmithConverterFactory extends Converter.Factory {
         Node registerNode = bodyElement.child(0).childNode(0);
         if ("#text".equals(registerNode.nodeName())) {
           // 注册失败，通常是账号已存在，但密码不对；如果账号密码正确，会有一个跳转的script
-          builder.title("失败(无法注册，账号已存在)");
+          builder.result("失败(无法注册，账号已存在)");
         }
       }
       List<Link> listGame = new ArrayList<>();
@@ -85,7 +83,7 @@ final class SmithConverterFactory extends Converter.Factory {
             if (i == 0) {
               // 说明是新注册用户
               builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
-              builder.title("成功(注册新账号)");
+              builder.result("成功(注册新账号)");
             } else {
               String suffix = linkElement.nextSibling().toString();
               if (suffix.contains("(")) {
@@ -95,7 +93,7 @@ final class SmithConverterFactory extends Converter.Factory {
             }
           } else {
             builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
-            builder.title("成功(欢迎回来)");
+            builder.result("成功(欢迎回来)");
           }
         }
       }

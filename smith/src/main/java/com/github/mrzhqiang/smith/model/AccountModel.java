@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import cn.mrzhqiang.helper.AccountHelper;
-import com.github.mrzhqiang.smith.BaseApp;
+import com.github.mrzhqiang.smith.SmithApp;
 import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.db.Db;
 import com.github.mrzhqiang.smith.db.DbException;
@@ -37,7 +37,7 @@ public final class AccountModel {
   private final Set<Subscription> subscriptions = new HashSet<>();
 
   public AccountModel() {
-    BaseApp.appComponent().inject(this);
+    SmithApp.appComponent().inject(this);
   }
 
   @AnyThread public void create(Account account, @NonNull Result<Account> result) {
@@ -60,10 +60,10 @@ public final class AccountModel {
         .doOnNext(this::insertIfNewAccount)
         .flatMap(this::registerOrLogin)
         .toList()
-        .doOnNext(logins -> {
+        .doOnNext(accounts -> {
           BriteDatabase.Transaction transaction = db.newTransaction();
           try {
-            for (Account a : logins) {
+            for (Account a : accounts) {
               updateByLogin(a);
             }
             transaction.markSuccessful();

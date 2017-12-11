@@ -10,7 +10,7 @@ import java.util.List;
 
 @AutoValue public abstract class Login implements Parcelable {
 
-  public abstract String title();
+  public abstract String result();
 
   @Nullable public abstract Link lastGame();
 
@@ -18,8 +18,8 @@ import java.util.List;
 
   @Nullable public abstract String script();
 
-  public static Login create(String title, Link lastGame, List<Link> listGame, String script) {
-    return builder().title(title).lastGame(lastGame).listGame(listGame).script(script).build();
+  public static Login create(String result, Link lastGame, List<Link> listGame, String script) {
+    return builder().result(result).lastGame(lastGame).listGame(listGame).script(script).build();
   }
 
   public static TypeAdapter<Login> typeAdapter(Gson gson) {
@@ -31,7 +31,7 @@ import java.util.List;
   }
 
   @AutoValue.Builder public abstract static class Builder {
-    public abstract Builder title(String title);
+    public abstract Builder result(String result);
 
     public abstract Builder lastGame(Link lastGame);
 

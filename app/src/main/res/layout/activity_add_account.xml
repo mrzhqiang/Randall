@@ -140,7 +140,7 @@
           android:layout_margin="4dp"
           android:enabled="@{addAccount.addEnabled}"
           android:onClick="@{addAccount.clickAdd}"
-          android:text="@string/login"
+          android:text="@string/add_account"
           style="@style/Widget.AppCompat.Button.Colored"
           />
     </LinearLayout>

@@ -11,26 +11,26 @@ import com.github.mrzhqiang.randall.databinding.ActivityWelcomeBinding;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-  public final View.OnClickListener clickCreate = v -> openLogin();
+  public final View.OnClickListener clickAdd = v -> openAddAccount();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ActivityWelcomeBinding binding =
         DataBindingUtil.setContentView(this, R.layout.activity_welcome);
-    binding.setActivity(this);
+    binding.setWelcome(this);
 
     setSupportActionBar(binding.toolbar);
-  }
-
-  public void openLogin() {
-    Intent intent = new Intent(this, AddAccountActivity.class);
-    // 跳转时不需要动画，让页面过度得更快
-    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    startActivity(intent);
   }
 
   @Override public void onBackPressed() {
     // true表示不是根活动，也可以移到后台
     moveTaskToBack(true);
+  }
+
+  public void openAddAccount() {
+    Intent intent = new Intent(this, AddAccountActivity.class);
+    // 跳转时不需要动画，让页面过度得更快
+    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    startActivity(intent);
   }
 }

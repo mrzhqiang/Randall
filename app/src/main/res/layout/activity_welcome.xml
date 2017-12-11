@@ -4,7 +4,7 @@
     >
   <data>
     <variable
-        name="activity"
+        name="welcome"
         type="com.github.mrzhqiang.randall.ui.WelcomeActivity"
         />
   </data>
@@ -64,7 +64,7 @@
           android:layout_gravity="end"
           android:layout_marginTop="10dp"
           android:layout_margin="4dp"
-          android:onClick="@{activity.clickCreate}"
+          android:onClick="@{welcome.clickAdd}"
           android:text="@string/add_account"
           style="@style/Widget.AppCompat.Button.Colored"
           />
