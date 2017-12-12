@@ -21,11 +21,25 @@
         app:title="@string/app_name"
         >
     </android.support.v7.widget.Toolbar>
-    <FrameLayout
-        android:id="@+id/content"
+    <android.support.v4.widget.SlidingPaneLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    </FrameLayout>
+      <!--suppress AndroidUnknownAttribute -->
+      <android.support.v7.widget.RecyclerView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:adapter="@{randall.adapter}"
+          android:itemAnimator="@{randall.itemAnimator}"
+          android:layoutManager="@{randall.layoutManager}"
+          >
+      </android.support.v7.widget.RecyclerView>
+      <FrameLayout
+          android:id="@+id/container"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          >
+      </FrameLayout>
+    </android.support.v4.widget.SlidingPaneLayout>
   </LinearLayout>
 </layout>

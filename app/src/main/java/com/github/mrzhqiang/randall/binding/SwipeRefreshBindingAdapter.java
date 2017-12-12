@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.randall.ui.adapters;
+package com.github.mrzhqiang.randall.binding;
 
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;

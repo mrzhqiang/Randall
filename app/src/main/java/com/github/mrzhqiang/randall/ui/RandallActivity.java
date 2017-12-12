@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityRandallBinding;
+import com.github.mrzhqiang.randall.ui.adapters.RandallAdapter;
+import com.github.mrzhqiang.randall.viewmodel.ItemAccountViewModel;
 import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.model.AccountModel;
 import com.github.mrzhqiang.smith.net.Result;
@@ -19,7 +24,9 @@ import java.util.List;
 
 public class RandallActivity extends AppCompatActivity {
 
-  public final ObservableArrayList<Account> accountList = new ObservableArrayList<>();
+  public final RandallAdapter adapter = new RandallAdapter();
+  public final RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+  public final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
   private final AccountModel accountModel = new AccountModel();
 
@@ -57,15 +64,7 @@ public class RandallActivity extends AppCompatActivity {
           return;
         }
 
-        accountList.clear();
-        accountList.addAll(result);
-
-        // 这里是测试方法
-        StringBuilder builder = new StringBuilder();
-        for (Account account : result) {
-          builder.append(account.toString());
-        }
-        new AlertDialog.Builder(RandallActivity.this).setMessage(builder.toString()).show();
+        adapter.updateData(result);
       }
 
       @Override public void onFailed(String message) {
@@ -91,9 +90,6 @@ public class RandallActivity extends AppCompatActivity {
 
   private void openAddAccount() {
     Intent intent = new Intent(this, AddAccountActivity.class);
-    if (accountList.size() > 0) {
-      intent.putExtra("account", accountList.get(0));
-    }
     startActivity(intent);
   }
 }

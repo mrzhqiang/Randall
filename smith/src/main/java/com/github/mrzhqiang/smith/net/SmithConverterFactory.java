@@ -63,6 +63,7 @@ final class SmithConverterFactory extends Converter.Factory {
           dataScript = dataScript.split("=", 2)[1].replace("'", "").replace(";", "");
           dataScript = baseUrl + "/" + dataScript;
           builder.script(dataScript);
+          builder.result("失败(检测到跳转链接)");
         }
       } else {
         Node registerNode = bodyElement.child(0).childNode(0);
