@@ -31,6 +31,7 @@
         android:name=".ui.AddAccountActivity"
         android:label="@string/login_label"
         android:noHistory="true"/>
+    <activity android:name=".ui.LoginActivity"/>
 
   </application>
 </manifest>

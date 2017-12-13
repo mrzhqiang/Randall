@@ -12,7 +12,10 @@ import java.util.List;
 
   public abstract List<Input> inputList();
 
-  public static Form create(String action, String method, List<Input> inputList) {
-    return new AutoValue_Form(action, method, inputList);
+  public abstract List<Select> selectList();
+
+  public static Form create(String action, String method, List<Input> inputList,
+      List<Select> selectList) {
+    return new AutoValue_Form(action, method, inputList, selectList);
   }
 }

@@ -83,7 +83,7 @@ final class SmithConverterFactory extends Converter.Factory {
         Element linkElement = linkElements.get(i);
         String text = linkElement.text();
         if (text.contains("地狱之门")) {
-          String href = linkElement.attr("href");
+          String href = linkElement.absUrl("href");
           String suffix = linkElement.nextSibling().toString();
           if (href.contains(baseUrl)) {
             if (!suffix.contains("(")) {
@@ -104,11 +104,15 @@ final class SmithConverterFactory extends Converter.Factory {
 
   private static class GameConverter implements Converter<ResponseBody, Game> {
     @Override public Game convert(@NonNull ResponseBody value) throws IOException {
-      String html = value.string();
-      Document document = Jsoup.parse(html);
+      Document document = Jsoup.parse(value.string(), "http://dy.haowanba.com");
       String title = document.title();
-      String body = document.body().toString();
-      return Game.create(title, body);
+      Element body = document.body();
+      Element scriptElement = body.selectFirst("script");
+      String script = "";
+      if (scriptElement != null) {
+        script = scriptElement.data().split("=")[1].replace("'", "").replace(";", "");
+      }
+      return Game.create(title, body.toString(), script);
     }
   }
 }

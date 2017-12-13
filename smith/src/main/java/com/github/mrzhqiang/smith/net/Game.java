@@ -9,7 +9,9 @@ import com.google.auto.value.AutoValue;
 
   public abstract String body();
 
-  public static Game create(String title, String body) {
-    return new AutoValue_Game(title, body);
+  public abstract String script();
+
+  public static Game create(String title, String body, String script) {
+    return new AutoValue_Game(title, body, script);
   }
 }
