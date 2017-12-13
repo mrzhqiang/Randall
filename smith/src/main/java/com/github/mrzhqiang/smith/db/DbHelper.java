@@ -3,7 +3,6 @@ package com.github.mrzhqiang.smith.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import cn.mrzhqiang.logger.Log;
 
@@ -22,7 +21,9 @@ final class DbHelper extends SQLiteOpenHelper {
       + " char(15) NOT NULL PRIMARY KEY,"
       + PASSWORD
       + " char(15) NOT NULL,"
-      + DATA
+      + ALIAS
+      + " char(20),"
+      + LOGIN
       + " TEXT"
       + ")";
 

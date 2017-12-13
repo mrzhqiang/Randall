@@ -8,23 +8,23 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ItemAccountBinding;
-import com.github.mrzhqiang.randall.viewmodel.ItemAccountViewModel;
+import com.github.mrzhqiang.randall.viewmodel.ItemAccountViewHolder;
 import com.github.mrzhqiang.smith.db.Account;
 import java.util.List;
 
-public class RandallAdapter extends RecyclerView.Adapter<ItemAccountViewModel> {
+public class RandallAdapter extends RecyclerView.Adapter<ItemAccountViewHolder> {
 
   public final ObservableList<Account> dataList = new ObservableArrayList<>();
 
-  @Override public ItemAccountViewModel onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public ItemAccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     ItemAccountBinding binding =
         DataBindingUtil.inflate(inflater, R.layout.item_account, parent, false);
-    binding.setItemAccount(new ItemAccountViewModel(binding.getRoot()));
+    binding.setItemAccount(new ItemAccountViewHolder(binding.getRoot()));
     return binding.getItemAccount();
   }
 
-  @Override public void onBindViewHolder(ItemAccountViewModel holder, int position) {
+  @Override public void onBindViewHolder(ItemAccountViewHolder holder, int position) {
     holder.bind(dataList.get(position));
   }
 
@@ -37,10 +37,8 @@ public class RandallAdapter extends RecyclerView.Adapter<ItemAccountViewModel> {
   }
 
   public void updateData(List<Account> accounts) {
-    if (accounts != null) {
-      dataList.clear();
-      dataList.addAll(accounts);
-      notifyDataSetChanged();
-    }
+    dataList.clear();
+    dataList.addAll(accounts);
+    notifyDataSetChanged();
   }
 }

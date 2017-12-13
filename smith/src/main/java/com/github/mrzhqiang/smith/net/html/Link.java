@@ -1,7 +1,6 @@
 package com.github.mrzhqiang.smith.net.html;
 
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -10,22 +9,23 @@ import com.google.gson.TypeAdapter;
 
   public abstract String text();
 
-  @Nullable public abstract String suffix();
+  public abstract String suffix();
 
   public abstract String href();
 
-  public static Builder builder() {
-    return new AutoValue_Link.Builder();
+  public String showContent() {
+    if ("".equals(suffix())) {
+      return text();
+    }
+    return text() + suffix();
   }
 
-  @AutoValue.Builder public abstract static class Builder {
-    public abstract Builder text(String text);
+  public static Link create(String text, String suffix, String href) {
+    return new AutoValue_Link(text, suffix, href);
+  }
 
-    public abstract Builder suffix(String suffix);
-
-    public abstract Builder href(String href);
-
-    public abstract Link build();
+  public static Link empty() {
+    return create("", "", "");
   }
 
   public static TypeAdapter<Link> typeAdapter(Gson gson) {

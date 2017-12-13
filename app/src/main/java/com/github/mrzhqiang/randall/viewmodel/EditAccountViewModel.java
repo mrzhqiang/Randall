@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cn.mrzhqiang.helper.AccountHelper;
 import com.github.mrzhqiang.smith.db.Account;
+import com.github.mrzhqiang.smith.net.Login;
 
 public final class EditAccountViewModel {
 
@@ -75,7 +76,7 @@ public final class EditAccountViewModel {
       passwordError.set("请输入6-15位数字或字母");
       return null;
     }
-    return Account.create(username, password, null);
+    return Account.create(username, password, "", Login.EMPTY);
   }
 
   public void cancelAll() {

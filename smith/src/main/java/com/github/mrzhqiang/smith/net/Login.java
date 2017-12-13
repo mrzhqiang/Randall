@@ -1,26 +1,22 @@
 package com.github.mrzhqiang.smith.net;
 
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import com.github.mrzhqiang.smith.net.html.Link;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import java.util.Collections;
 import java.util.List;
 
 @AutoValue public abstract class Login implements Parcelable {
 
-  public abstract String result();
+  public static final Login EMPTY = empty();
 
-  @Nullable public abstract Link lastGame();
+  public abstract Link lastGame();
 
-  @Nullable public abstract List<Link> listGame();
+  public abstract List<Link> listGame();
 
-  @Nullable public abstract String script();
-
-  public static Login create(String result, Link lastGame, List<Link> listGame, String script) {
-    return builder().result(result).lastGame(lastGame).listGame(listGame).script(script).build();
-  }
+  public abstract String script();
 
   public static TypeAdapter<Login> typeAdapter(Gson gson) {
     return new AutoValue_Login.GsonTypeAdapter(gson);
@@ -30,9 +26,11 @@ import java.util.List;
     return new AutoValue_Login.Builder();
   }
 
-  @AutoValue.Builder public abstract static class Builder {
-    public abstract Builder result(String result);
+  private static Login empty() {
+    return builder().script("").lastGame(Link.empty()).listGame(Collections.emptyList()).build();
+  }
 
+  @AutoValue.Builder public abstract static class Builder {
     public abstract Builder lastGame(Link lastGame);
 
     public abstract Builder listGame(List<Link> listGame);

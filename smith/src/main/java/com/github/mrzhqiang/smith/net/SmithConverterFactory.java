@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
@@ -51,55 +52,53 @@ final class SmithConverterFactory extends Converter.Factory {
     }
 
     @Override public Login convert(@NonNull ResponseBody body) throws IOException {
-      String html = body.string();
-      Document document = Jsoup.parse(html, baseUrl);
-      Element bodyElement = document.body();
-      // FIXME 或许有更好的查询手段，目前就这样吧
+      Element bodyElement = Jsoup.parse(body.string(), baseUrl).body();
+
       Element scriptElement = bodyElement.selectFirst("script");
       if (scriptElement != null) {
         String dataScript = scriptElement.data();
         if (!dataScript.isEmpty()) {
-          // 注册接口的话，出现跳转只会是：账号密码正确
+          // 注册接口出现跳转：账号密码正确
           dataScript = dataScript.split("=", 2)[1].replace("'", "").replace(";", "");
           dataScript = baseUrl + "/" + dataScript;
-          builder.script(dataScript);
-          builder.result("失败(检测到跳转链接)");
-        }
-      } else {
-        Node registerNode = bodyElement.child(0).childNode(0);
-        if ("#text".equals(registerNode.nodeName())) {
-          // 注册失败，通常是账号已存在，但密码不对；如果账号密码正确，会有一个跳转的script
-          builder.result("失败(无法注册，账号已存在)");
+          return builder.script(dataScript)
+              .lastGame(Link.empty())
+              .listGame(Collections.emptyList())
+              .build();
         }
       }
-      List<Link> listGame = new ArrayList<>();
+
+      String format = "(%s)";
+      Node registerNode = bodyElement.child(0).childNode(0);
+      if ("#text".equals(registerNode.nodeName())) {
+        return builder.script("")
+            .lastGame(Link.create("无效", String.format(format, registerNode.toString()), ""))
+            .listGame(Collections.emptyList())
+            .build();
+      }
+
       Elements linkElements = bodyElement.select("a[href]");
+      List<Link> listGame = new ArrayList<>();
       for (int i = 0; i < linkElements.size(); i++) {
         Element linkElement = linkElements.get(i);
         String text = linkElement.text();
         if (text.contains("地狱之门")) {
           String href = linkElement.attr("href");
-          Link.Builder linkBuilder = Link.builder().text(text).href(href);
+          String suffix = linkElement.nextSibling().toString();
           if (href.contains(baseUrl)) {
-            if (i == 0) {
-              // 说明是新注册用户
-              builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
-              builder.result("成功(注册新账号)");
-            } else {
-              String suffix = linkElement.nextSibling().toString();
-              if (suffix.contains("(")) {
-                linkBuilder.suffix(suffix);
-              }
-              listGame.add(linkBuilder.build());
+            if (!suffix.contains("(")) {
+              suffix = String.format(format, "上次登陆");
             }
+            listGame.add(Link.create(text, suffix, href));
           } else {
-            builder.lastGame(linkBuilder.suffix("(推荐登陆)").build());
-            builder.result("成功(欢迎回来)");
+            if (!suffix.contains("(")) {
+              suffix = String.format(format, "推荐登陆");
+            }
+            listGame.add(0, Link.create(text, suffix, href));
           }
         }
       }
-      builder.listGame(listGame);
-      return builder.build();
+      return builder.script("").lastGame(listGame.remove(0)).listGame(listGame).build();
     }
   }
 

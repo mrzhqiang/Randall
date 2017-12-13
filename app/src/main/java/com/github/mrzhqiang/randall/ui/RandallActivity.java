@@ -2,10 +2,8 @@ package com.github.mrzhqiang.randall.ui;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 import com.github.mrzhqiang.randall.R;
 import com.github.mrzhqiang.randall.databinding.ActivityRandallBinding;
 import com.github.mrzhqiang.randall.ui.adapters.RandallAdapter;
-import com.github.mrzhqiang.randall.viewmodel.ItemAccountViewModel;
 import com.github.mrzhqiang.smith.db.Account;
 import com.github.mrzhqiang.smith.model.AccountModel;
 import com.github.mrzhqiang.smith.net.Result;
