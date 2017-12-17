@@ -59,8 +59,7 @@ final class SmithConverterFactory extends Converter.Factory {
         String dataScript = scriptElement.data();
         if (!dataScript.isEmpty()) {
           // 注册接口出现跳转：账号密码正确
-          dataScript = dataScript.split("=", 2)[1].replace("'", "").replace(";", "");
-          dataScript = baseUrl + "/" + dataScript;
+          dataScript = baseUrl + "/" + toScriptPath(dataScript);
           return builder.script(dataScript)
               .lastGame(Link.empty())
               .listGame(Collections.emptyList())
@@ -110,9 +109,21 @@ final class SmithConverterFactory extends Converter.Factory {
       Element scriptElement = body.selectFirst("script");
       String script = "";
       if (scriptElement != null) {
-        script = scriptElement.data().split("=")[1].replace("'", "").replace(";", "");
+        script = toScriptPath(scriptElement.data());
       }
       return Game.create(title, body.toString(), script);
     }
+  }
+
+  private static String toScriptPath(String script) {
+    if (script == null || script.isEmpty()) {
+      return "";
+    }
+    String[] split = script.split("=", 2);
+    if (script.length() != 2) {
+      return script;
+    }
+    String value = split[1];
+    return value.replace("'", "").replace(";", "");
   }
 }
