@@ -1,42 +1,71 @@
 package com.github.mrzhqiang.randall.ui;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 import com.github.mrzhqiang.randall.R;
+import com.github.mrzhqiang.randall.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-  private TextView mTextMessage;
-
-  public final BottomNavigationView.OnNavigationItemSelectedListener
-      mOnNavigationItemSelectedListener = this::itemSelected;
+  public final BottomNavigationView.OnNavigationItemSelectedListener itemSelected =
+      this::itemSelected;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+    binding.setMain(this);
 
-    mTextMessage = (TextView) findViewById(R.id.message);
-    BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    setSupportActionBar(binding.toolbar);
+
+    AccountManager accountManager = AccountManager.get(this);
+    Account[] accounts = accountManager.getAccountsByType("Randall");
+
+
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction()
+          .add(R.id.container, RandallFragment.newInstance())
+          .commit();
+    }
   }
 
   private boolean itemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.navigation_main:
-        Toast.makeText(MainActivity.this, "兰达尔", Toast.LENGTH_SHORT).show();
+        showRandall();
         return true;
       case R.id.navigation_bookmark:
-        Toast.makeText(MainActivity.this, "书签", Toast.LENGTH_SHORT).show();
+        showBookmark();
         return true;
       case R.id.navigation_me:
-        Toast.makeText(MainActivity.this, "我", Toast.LENGTH_SHORT).show();
+        showMe();
         return true;
       default:
         return false;
     }
   }
+
+  private void showRandall() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.container, RandallFragment.newInstance())
+        .commit();
+  }
+
+  private void showBookmark() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.container, BookmarkFragment.newInstance())
+        .commit();
+  }
+
+  private void showMe() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.container, MeFragment.newInstance())
+        .commit();
+  }
+
 }

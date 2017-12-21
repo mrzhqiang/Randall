@@ -2,7 +2,6 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     >
   <data>
     <variable
@@ -16,6 +15,7 @@
       android:orientation="vertical"
       >
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="兰达尔"
@@ -31,9 +31,10 @@
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_height="56dp"
+        android:layout_gravity="start"
         android:background="@android:color/background_light"
+        android:navigationItemSelected="@{main.itemSelected}"
         app:menu="@menu/navigation"
         />
   </LinearLayout>
