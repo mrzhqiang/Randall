@@ -4,7 +4,7 @@ android {
   compileSdkVersion 26
 
   defaultConfig {
-    minSdkVersion 19
+    minSdkVersion 14
     targetSdkVersion 26
     versionCode 1
     versionName "1.0"
@@ -18,6 +18,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
   compileOptions {
     sourceCompatibility 1.8
     targetCompatibility 1.8
@@ -33,8 +34,18 @@ dependencies {
   androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
   // 依赖注入框架
-  compile 'com.google.dagger:dagger:2.10'
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+  compile 'com.google.dagger:dagger:2.13'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
+  compile "com.google.dagger:dagger-android:2.13"
+  compile "com.google.dagger:dagger-android-support:2.13"
+  annotationProcessor "com.google.dagger:dagger-android-processor:2.13"
+
+  // 官方数据库
+  compile "android.arch.persistence.room:runtime:1.0.0"
+  annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
+  // guava 工具
+  compile 'com.google.guava:guava:18.0'
 
   // 数据库框架
   compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
