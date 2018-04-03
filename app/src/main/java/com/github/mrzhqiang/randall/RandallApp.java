@@ -1,16 +1,23 @@
 package com.github.mrzhqiang.randall;
 
-import com.github.mrzhqiang.smith.SmithApp;
+import cn.mrzhqiang.logger.Log;
+import com.github.mrzhqiang.randall.di.DaggerAppComponent;
+import com.squareup.picasso.Picasso;
+import dagger.android.AndroidInjector;
+import dagger.android.DaggerApplication;
+import javax.inject.Inject;
 
-public final class RandallApp extends SmithApp {
+public final class RandallApp extends DaggerApplication {
 
-  public static final String BASE_URL = "http://haowanba.com";
+  @Inject Picasso picasso;
 
-  @Override public boolean debug() {
-    return BuildConfig.DEBUG;
+  @Override protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+    return DaggerAppComponent.builder().application(this).build();
   }
 
-  @Override public String baseUrl() {
-    return BASE_URL;
+  @Override public void onCreate() {
+    super.onCreate();
+    Log.debug(BuildConfig.DEBUG);
+    Picasso.setSingletonInstance(picasso);
   }
 }

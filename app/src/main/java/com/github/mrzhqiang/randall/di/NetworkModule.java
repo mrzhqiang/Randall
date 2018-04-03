@@ -1,12 +1,14 @@
-package com.github.mrzhqiang.smith.net;
+package com.github.mrzhqiang.randall.di;
 
-import android.app.Application;
+import android.content.Context;
+import cn.mrzhqiang.logger.BuildConfig;
 import cn.mrzhqiang.logger.Log;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
@@ -21,49 +23,48 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
 import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
-@Module(includes = {
-    NetModule.OkHttpModule.class,
-}) public final class NetModule {
+@Module(
+    includes = NetworkModule.OkHttpModule.class
+) final class NetworkModule {
 
-  @Provides @Singleton Retrofit provideRetrofit(OkHttpClient client,
-      @Named("baseUrl") String baseUrl) {
-    return new Retrofit.Builder().baseUrl(baseUrl)
-        .addConverterFactory(SmithConverterFactory.create(baseUrl))
+  @Singleton
+  @Provides Retrofit provideRetrofit(OkHttpClient client) {
+    return new Retrofit.Builder().baseUrl("http://haowanba.com")
+        //.addConverterFactory(SmithConverterFactory.create(baseUrl))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .client(client)
         .build();
   }
 
-  @Provides @Singleton OkHttp3Downloader provideOkHttpDownloader(
-      @Named("picasso") OkHttpClient client) {
+  @Singleton
+  @Provides OkHttp3Downloader provideOkHttpDownloader(
+      @Named("picassoClient") OkHttpClient client) {
     return new OkHttp3Downloader(client);
   }
 
-  @Provides @Singleton Picasso providePicasso(Application application, OkHttp3Downloader downloader,
-      @Named("debug") boolean debug) {
-    return new Picasso.Builder(application).downloader(downloader)
-        .loggingEnabled(debug)
-        .indicatorsEnabled(debug)
+  @Singleton
+  @Provides Picasso providePicasso(Context context, OkHttp3Downloader downloader) {
+    return new Picasso.Builder(context.getApplicationContext()).downloader(downloader)
+        .loggingEnabled(BuildConfig.DEBUG)
+        .indicatorsEnabled(BuildConfig.DEBUG)
         .listener((picasso1, uri, exception) -> Log.d("Picasso",
             String.format(Locale.getDefault(), "Load Image: %s, failed: %s.", uri,
                 exception.getMessage())))
         .build();
   }
 
-  @Provides @Singleton Smith provideSmith(Retrofit retrofit) {
-    return retrofit.create(Smith.class);
-  }
-
-  @Module public static final class OkHttpModule {
+  @Module
+  static final class OkHttpModule {
     private static final String CACHE_DIR = "ok_http_cache";
     private static final int CACHE_MAX_SIZE = 50 * 1024 * 1024;
 
-    @Provides @Singleton Authenticator provideAuthenticator() {
+    @Singleton
+    @Provides Authenticator provideAuthenticator() {
       return (route, response) -> {
         String auth = response.request().header("Authorization");
         if (auth == null) {
           // FIXME 模拟一个权限，留待未来完善
-          String credential = Credentials.basic("ApiKey", "null");
+          String credential = Credentials.basic("ApiKey", "null", Charset.defaultCharset());
           return response.request().newBuilder().header("Authorization", credential).build();
         }
         // Token过期且刷新失败
@@ -71,8 +72,9 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
       };
     }
 
-    @Provides @Singleton Cache provideCache(Application application) {
-      File file = new File(application.getCacheDir(), CACHE_DIR);
+    @Singleton
+    @Provides Cache provideCache(Context context) {
+      File file = new File(context.getApplicationContext().getCacheDir(), CACHE_DIR);
       if (!file.exists()) {
         //noinspection ResultOfMethodCallIgnored
         file.mkdirs();
@@ -80,18 +82,22 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
       return new Cache(file, CACHE_MAX_SIZE);
     }
 
-    @Named("picasso") @Provides @Singleton Cache providePicassoCache(Application application) {
-      return OkHttp3Downloader.createDefaultCache(application);
+    @Singleton
+    @Provides
+    @Named("picassoCache") Cache providePicassoCache(Context context) {
+      return OkHttp3Downloader.createDefaultCache(context.getApplicationContext());
     }
 
-    @Provides @Singleton HttpLoggingInterceptor provideHttpLoggingInterceptor() {
+    @Singleton
+    @Provides HttpLoggingInterceptor provideHttpLoggingInterceptor() {
       HttpLoggingInterceptor logger =
           new HttpLoggingInterceptor(message -> Log.d("Network", message));
       logger.setLevel(BODY);
       return logger;
     }
 
-    @Provides @Singleton OkHttpClient provideOkHttpClient(Authenticator authenticator, Cache cache,
+    @Singleton
+    @Provides OkHttpClient provideOkHttpClient(Authenticator authenticator, Cache cache,
         HttpLoggingInterceptor interceptor) {
       return new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
           .writeTimeout(15, TimeUnit.SECONDS)
@@ -102,14 +108,17 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
           .build();
     }
 
-    @Named("picasso") @Provides @Singleton OkHttpClient providePicassoClient(
-        @Named("picasso") Cache cache, HttpLoggingInterceptor interceptor) {
-      return new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
-          .writeTimeout(15, TimeUnit.SECONDS)
-          .readTimeout(15, TimeUnit.SECONDS)
+    @Singleton
+    @Provides
+    @Named("picassoClient") OkHttpClient providePicassoClient(
+        @Named("picassoCache") Cache cache, HttpLoggingInterceptor interceptor) {
+      return new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS)
+          .writeTimeout(10, TimeUnit.SECONDS)
+          .readTimeout(10, TimeUnit.SECONDS)
           .cache(cache)
           .addInterceptor(interceptor)
           .build();
     }
   }
 }
+

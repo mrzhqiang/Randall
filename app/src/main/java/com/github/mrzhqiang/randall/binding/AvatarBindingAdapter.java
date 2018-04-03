@@ -10,13 +10,13 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class AvatarBindingAdapter {
+public final class AvatarBindingAdapter {
   private static final String TAG = "AvatarBindingAdapter";
 
   @BindingAdapter("nameToAvatar")
   public static void setAvatarByUsername(ImageView view, String username) {
     Observable.just(username)
-        .subscribeOn(Schedulers.newThread())
+        .subscribeOn(Schedulers.io())
         .filter(s -> !TextUtils.isEmpty(s))
         .map(s -> {
           DisplayMetrics metrics = view.getResources().getDisplayMetrics();
@@ -24,6 +24,6 @@ public class AvatarBindingAdapter {
         })
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(view::setImageBitmap,
-            throwable -> Log.e(TAG, "通过名字：" + username + "，获取随机头像失败。", throwable));
+            throwable -> Log.e(TAG, "通过 " + username + " 获取头像出错。", throwable));
   }
 }

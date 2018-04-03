@@ -1,1 +1,1 @@
-include ':app', ':smith'
+include ':app'
